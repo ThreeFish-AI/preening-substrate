@@ -24,7 +24,7 @@ git clone https://github.com/ThreeFish-AI/preening-substrate.git ~/.claude/skill
 
 # 方式二：symlink（维护模式——改仓库即改 Skill，单一事实源）
 git clone https://github.com/ThreeFish-AI/preening-substrate.git ~/projects/preening-substrate
-ln -s ~/projects/preening-substrate ~/.claude/skills/preening-substrate
+ln -sfn ~/projects/preening-substrate ~/.claude/skills/preening-substrate  # -n：重复执行不会在仓库内生成自引用链接
 ```
 
 > 技能清单在会话开始时扫描，安装后须重启 Agent 会话方可被发现。也可用 [vercel-labs/skills](https://github.com/vercel-labs/skills) CLI 安装：`npx skills add ThreeFish-AI/preening-substrate`。
