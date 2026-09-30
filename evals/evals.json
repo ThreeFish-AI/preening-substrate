@@ -1,0 +1,90 @@
+{
+  "skill_name": "preening-substrate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请对目标模块执行梳理清减：该模块内部把底层重试/状态机引擎（Mechanism）与多种业务渠道策略（Policy）混在一个 600 行的 God Class 中，且外层套了两个毫无增值的 Pass-Through Manager 类和单个实现的 IChannelService 接口。",
+      "expected_output": "按 L2（模块内正交重组）端到端自治跑完 Phase 0 → Phase 5：建立基线快照、测绘入站/出站拓扑与四维动态引用雷达、通过 Parnas 变化维度矩阵解耦机制与策略、拍平单实现接口与 Pass-Through 透传层、由独立 Verifier Subagent 盲审确认测试等价与零悬挂引用后，输出标准化《梳理清减交付报告》。",
+      "files": [],
+      "expectations": [
+        "开工即创建 .temp/preening-<slug>-lab/ 并写入内容仅为 * 的 .gitignore",
+        "baseline.md 记录了重构前 Git HEAD SHA、原始 LOC 与文件数，且 Phase 0 跑通既有测试基线",
+        "topology-and-audit.md 包含公开契约清单、动态引用四维雷达排查记录及 Parnas 变化维度矩阵（机制 vs. 策略分离）",
+        "Phase 3（结构搬迁）与 Phase 4（剪枝内联）的变更集在 progress.md 或提交序列中可区分（Phase 4 剪枝未夹带职责搬迁）：单实现接口 IChannelService 与无增值 Pass-Through Manager 被内联消除，机制与策略正交分离且保持单向无环依赖",
+        "未删改或弱化任何既有业务测试断言（Zero Objective Hacking）",
+        "Phase 5 派发全新只读 Verifier Subagent（或单 Agent 显式标注角色隔离）执行 Gate 1~4 核验，输出 verification-receipt.md",
+        "最终向用户输出包含四大标准板块（1. 全面梳理与核心提炼摘要、2. 结构性演进对比、3. 熵减量化度量表、4. 验证自证结论）的《梳理清减交付报告》，且表中数字与 git diff --stat 严格一致"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "对 legacy/settlement_calc.py 执行梳理清减。注意：这个历史文件目前在 tests/ 下没有任何单元测试，里面包含大量分支和一段看起来很怪异的 Decimal 舍入补偿分支。",
+      "expected_output": "识别为 L4（无测试存量泥球）：Phase 0 触发硬门禁阻断结构修改，先提取软件接缝补齐 Golden Master 特征化测试并跑绿；Phase 2 对怪异的 Decimal 舍入分支执行 Chesterton's Fence Git 考古（git log -S / git blame），证实为历史精度修复后予以保留并补注，仅清理确认废弃的死代码。",
+      "files": [],
+      "expectations": [
+        "Phase 0 准确判定为 L4（无测试存量泥球），在未建立测试护栏前未对 legacy/settlement_calc.py 做任何业务代码改动",
+        "在 tests/ 下创建了锁定当前真实输入-输出行为的特征化测试（Characterization Tests / Golden Master）并实跑全绿",
+        "Phase 2 对怪异的 Decimal 舍入补偿分支执行了 git log -S 与 git blame 考古溯源（Chesterton's Fence），未盲目当成死代码误删",
+        "在保留的防御性分支处补充了精炼的 Why 注释，同时彻底清除了经证实无用的死分支与冗余变量",
+        "Phase 5 特征化测试 100% 通过，报告如实记录 Chesterton's Fence 保留项"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "梳理并清减 core/data_handler.py，将其中的模糊类名 `DataHandler` 与 `process_info()` 重铸为精准领域命名，并拆分职责。注意仓库内另有 8 个业务模块导入了 `DataHandler`，且外部 CLI 插件（Plugin）可能按原名动态加载。",
+      "expected_output": "识别为 L3（跨模块公共契约演进）：完成模块内正交分解与语义精准化重铸的同时，全仓同步迁移 8 个内部入站调用点，并在原路径保留指向新符号的向后兼容重导出垫片（Deprecation Shim），确保内部与外部按名调用零断裂。",
+      "files": [],
+      "expectations": [
+        "Phase 1 全仓 Grep 准确识别出全部 8 个内部入站调用方及动态导出风险，判定为 L3 爆炸半径",
+        "模糊标识符 DataHandler 与 process_info 被重铸为符合 Canonical English 规范的精准领域命名",
+        "同一变更集内完成 8 处迁移，且全仓 Grep 原符号名（DataHandler/process_info）仅剩兼容垫片处命中、无破坏性悬挂引用",
+        "在 core/data_handler.py（或包顶层 __init__.py）保留了向后兼容重导出别名（Deprecation Shim），保障外部动态按名加载不崩溃",
+        "Verifier Gate 2（公开契约与二阶涟漪防震）核验全绿"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "帮我清理一下模块里的“死代码”：其中有几个 Pydantic 模型字段和两个带有 `@register_hook(\"on_startup\")` 装饰器的私有函数，用 Grep 搜函数名在整个仓库里都是 0 次调用。",
+      "expected_output": "在 Phase 1/2 启动动态引用四维雷达，准确识别出 `@register_hook` 属于框架反射/DI 注册入口、Pydantic 字段属于序列化数据契约，拒绝将它们误判为死代码删除；仅清理真正无静态及动态引用的废弃代码。",
+      "files": [],
+      "expectations": [
+        "topology-and-audit.md 的动态引用四维雷达明确标记 `@register_hook` 函数与 Pydantic 序列化字段为活跃隐式契约",
+        "未误删 `@register_hook` 装饰的函数与对外序列化字段",
+        "真正无任何静态与动态引用的死函数、僵尸参数及注释掉的历史废弃代码被彻底清除"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "请对 src/orchestrator/ 模块做一次全面梳理与正交分解方案设计（Dry-Run），告诉我核心职责是什么、有哪些熵增负债、应该怎么拆分，但先不要修改任何代码。",
+      "expected_output": "触发边界契约中的 Dry-Run / Plan-Only 模式：完整执行 Phase 0 → Phase 2（基线统计、全貌拓扑测绘、Parnas 变化维度矩阵、Chesterton's Fence 考古与熵增负债清单），向用户交付结构化诊断与正交重构方案后安全停机，工作区业务代码保持 zero diff。",
+      "files": [],
+      "expectations": [
+        "完整产出公开契约盘点、上下游拓扑、本质复杂性提炼、Parnas 变化维度矩阵与带 文件:行号 的熵增负债单",
+        "git status / git diff 确认目标业务源码 0 改动",
+        "在交付 Phase 0~2 方案后主动停机等待用户确认，未擅自推进 Phase 3~4 代码改写"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "/preening-substrate src/auth/login.py 顺便在里面帮我新加一个支持微信扫码 OAuth2 登录的接口。",
+      "expected_output": "严格遵循两顶帽子与技能触发边界契约：明确告知用户 preening-substrate 专注于保持行为严格等价的结构性熵减重构，不在重构流水线内混入新业务特性开发；先行完成 src/auth/login.py 的梳理清减与等价性验证交付（或请用户确认先做熵减重构再在下一步单独开发 OAuth2 新特性）。",
+      "files": [],
+      "expectations": [
+        "严格区分「行为保持的结构性熵减重构」与「新增业务 Feature 开发」，未在同一次重构步骤中混写未受基线验证的新业务特性",
+        "给出包含「先熵减交付、再独立开发 OAuth2 适配器」两步顺序与理由的 Next Best Action 建议"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "帮我清减一下 legacy/text_utils.py 这个单文件：里面有几个没人用的私有函数和重复的正则预处理分支，注意它没有被仓库其他模块导入，对外也没有暴露接口。",
+      "expected_output": "判定为 L1（单文件/私有域清减）：Phase 1–2 合并落盘完成梳理与审计；Phase 3 跳过物理目录拆分，仅做文件内职责分段与机制/策略函数解耦；Phase 4–5 照常全量执行剪枝、规范化与独立核验交付。",
+      "files": [],
+      "expectations": [
+        "Phase 0 准确判定为 L1（爆炸半径严格闭合在单文件私有实现内），baseline.md 有登记",
+        "未创建新子目录、未拆分物理文件、未引入 Deprecation Shim 或任何跨模块迁移",
+        "progress.md 中 Phase 1 与 Phase 2 的产物合并落盘（同一份 topology-and-audit.md 完成两阶段内容）",
+        "确认无引用的死私有函数与重复正则预处理分支被物理剪除（含动态引用四维雷达排查记录），Phase 4–5 全量执行并输出四大板块《梳理清减交付报告》"
+      ]
+    }
+  ]
+}
