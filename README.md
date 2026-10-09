@@ -84,6 +84,7 @@ SKILL.md                                   # 技能主控契约（Frontmatter + 
 references/context-and-audit.md            # Phase 1–2 规约 SSOT（拓扑测绘 / 动态引用四维雷达 / Chesterton's Fence 考古 / Parnas 矩阵 / Ousterhout 浅模块审计）
 references/orthogonal-refactoring.md       # Phase 3–4 规约 SSOT（双阶段帽子与两振出局回退 / 深模块重塑 / 机制与策略分离 / SSOT 与兼容垫片 / 激进剪枝与语义重铸）
 references/verification-and-delivery.md    # Phase 0 & 5 规约 SSOT（Feathers 特征化测试护栏 / 独立 Verifier 四门禁盲审 / 多维熵减度量 / 标准化交付报告模板）
+references/plain-expression.md             # 文本表达质感 SSOT（读者四结果 / 句构三律 / 术语治理 / 双通道条目模板 / 改写筛选与禁则 / 表达力四维 / 改动验证）
 references/rsi-hook.md                     # RSI 自我改进钩子协议 SSOT（触发白名单 / 旁路捕获 / G0–G4 核验门禁 / PR 模板与降级矩阵）
 evals/trigger-evals.json                   # 触发边界评测集（13 正向应触发 + 14 近邻不触发，用于校验 description 路由精度）
 evals/evals.json                           # 端到端任务评测集（7 大重构场景：L1 单文件清减 / L2 正交重组 / L4 无测试遗产护栏 / L3 跨模块兼容垫片 / 动态反射排雷 / Dry-Run / 职责边界）
