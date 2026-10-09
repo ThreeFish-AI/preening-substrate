@@ -4,7 +4,7 @@ description: 对目标代码模块或子系统执行「预检护栏 → 全面�
 license: MIT
 compatibility: 适用于 Claude Code、Antigravity 等支持 Agent Skills 开放标准的宿主，并严格兼容 ThreeFish-AI/negentropy 的 preening_substrate 预设调用契约。依赖 git（基线锚定、Chesterton's Fence 历史溯源与微步回滚）、bash 及目标项目的测试与静态检查工具链（Python 优先 uv run，JS/TS 优先 pnpm）。Subagent 独立派发为推荐增强，单 Agent 运行时按文内角色隔离降级路径执行；allowed-tools 有意不含 Subagent 派发工具（Task/Agent）——未列入仅意味着不预授权，派发时按宿主正常权限流程请求，被拒即按单 Agent 角色隔离降级路径执行。
 metadata:
-  version: "1.2.0"
+  version: "1.0.3"
   author: ThreeFish-AI
   source: "migrated and evolved from user-level slash command ~/.claude/commands/preening-substrate.md"
 allowed-tools: Read Write Edit Glob Grep Bash
