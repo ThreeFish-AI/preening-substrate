@@ -4,7 +4,7 @@ description: 对目标代码模块或子系统执行「预检护栏 → 全面�
 license: MIT
 compatibility: 适用于 Claude Code、Antigravity 等支持 Agent Skills 开放标准的宿主，并严格兼容 ThreeFish-AI/negentropy 的 preening_substrate 预设调用契约。依赖 git（基线锚定、Chesterton's Fence 历史溯源与微步回滚）、bash 及目标项目的测试与静态检查工具链（Python 优先 uv run，JS/TS 优先 pnpm）。Subagent 独立派发为推荐增强，单 Agent 运行时按文内角色隔离降级路径执行；allowed-tools 有意不含 Subagent 派发工具（Task/Agent）——未列入仅意味着不预授权，派发时按宿主正常权限流程请求，被拒即按单 Agent 角色隔离降级路径执行。
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   author: ThreeFish-AI
   source: "migrated and evolved from user-level slash command ~/.claude/commands/preening-substrate.md"
 allowed-tools: Read Write Edit Glob Grep Bash
@@ -130,7 +130,7 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 
 ### Phase 5 · 对抗核验与量化交付
 
-> 必读：[verification-and-delivery §2–§4](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验)；[plain-expression §1–§3](references/plain-expression.md#1-读者四结果)（适用于交付报告叙述区，适用范围见 [§0](references/plain-expression.md#0-定位适用范围与冻结面)）
+> 必读：[verification-and-delivery §2–§4](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验)；[plain-expression §1–§3、§7](references/plain-expression.md#1-读者四结果)（适用于交付报告叙述区，适用范围见 [§0](references/plain-expression.md#0-定位适用范围与冻结面)）
 
 顺序是：先自己全量自检，再交独立盲审，最后整理交付。
 
@@ -145,7 +145,7 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 | [references/context-and-audit.md](references/context-and-audit.md) | Phase 1、Phase 2 开始前 | 资产与拓扑测绘、动态引用四维雷达、Chesterton's Fence 考古、Parnas 变化维度矩阵、Ousterhout 浅模块与透传层定量审计 |
 | [references/orthogonal-refactoring.md](references/orthogonal-refactoring.md) | Phase 3、Phase 4 开始前 | 双阶段帽子步法与两振出局回退规程（适配自 Fowler Two Hats）、深模块重塑、机制与策略解耦、SSOT 收敛与兼容垫片、激进剪枝与 Canonical English 语义重铸 |
 | [references/verification-and-delivery.md](references/verification-and-delivery.md) | Phase 0、Phase 5 开始前 | Feathers 特征化测试护栏、独立 Verifier 四维盲审（Quad-Gate）核查表、防 Goodhart 异化的多维熵减度量体系、标准化《梳理清减交付报告》模板 |
-| [references/plain-expression.md](references/plain-expression.md) | Phase 5 撰写交付报告叙述区前；撰写 RSI PR 正文前；修改本 Skill 的 SKILL.md / references / README 文本前 | 本 Skill 文本表达质感 SSOT：读者四结果、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与禁则、改动验证 |
+| [references/plain-expression.md](references/plain-expression.md) | Phase 5 撰写交付报告叙述区前；撰写 RSI PR 正文前；修改本 Skill 的 SKILL.md / references / README 文本前 | 本 Skill 文本表达质感 SSOT：读者四结果、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与禁则、表达力四维、改动验证 |
 | [references/rsi-hook.md](references/rsi-hook.md) | 首次 RSI 捕获、用户要求或交付后派发前 | 本 Skill 跨会话自我改进（RSI）协议、G0–G4 核验门禁与 PR 规范 |
 | [evals/trigger-evals.json](evals/trigger-evals.json) | 维护或优化 `description` 触发边界时 | 27 条正负双向路由触发评测集（13 应触发 + 14 近邻不触发） |
 | [evals/evals.json](evals/evals.json) | 维护或回归验证本 Skill 端到端行为时 | 7 大典型工程重构场景的端到端验收契约集 |

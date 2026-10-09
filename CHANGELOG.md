@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.2.0] - 2026-10-09
+
+### Changed
+
+- [plain-expression](references/plain-expression.md) 扩展表达力维度：§0 划界重切为「可懂性下限 + 表达力上限」双线（均为读者结果）；新增 §7 表达力四维（具象优先 / 关系结构类比 / 节奏与压力位 / AI 腔防治，IEEE 引证扩至 12 条）；§5 禁则 3 重切营销腔边界（禁不可证伪断言，不禁可指认修辞）；§6 外行盲评五问扩为七问（新增劲句指认与画面复述，先读后问防刷分）。[SKILL.md](SKILL.md) Phase 5 必读挂载扩至 §7、指针索引登记、版本升至 1.2.0；README 与 knowledge-map 登记行同步。标题零触碰，冻结面除 README 结构树 plain-expression 登记行原位更新（登记面非契约面，1.1.0 先例同树登记）外零变动，非本规约文件净增 ≤ 60 行达标。
+
 ## [1.1.0] - 2026-10-09
 
 ### Added
