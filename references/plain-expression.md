@@ -32,7 +32,7 @@
 
 ## 2. 句构三律
 
-1. **一句一事**：每句只做一个断言；40 字为参考值而非硬上限（规约定义句豁免）。命中即拆句。禁令被长句淹没时，拆出来的短句反而更有力——「无基线护栏，严禁进入结构变更」单列成句即是此类。
+1. **一句一事**：每句只做一个断言；40 字为参考值而非硬上限（规约定义句豁免；GOV.UK 对超过 25 词的英文句同样要求复查能否拆开 [7]）。命中即拆句。禁令被长句淹没时，拆出来的短句反而更有力——「无基线护栏，严禁进入结构变更」单列成句即是此类。
 2. **旧先新后**：句首主语位放读者已知的信息，句末压力位放希望读者带走的新信息 [2]。本仓应用：开篇先给 payoff（「行为严格不变」），手段与出处后置；出处声明不夹在操作命令中间。
 3. **定语限高三层**：中心名词前的修饰链超过三层，拆句后置。本仓应用：「独立行为等价性、二阶涟漪效应与度量对账核验员」→「独立核验者，负责行为等价性、改动波及面与度量对账」。
 
@@ -41,7 +41,7 @@
 1. **Canonical English 白名单保留**：行业公认技术术语保留英文原词，词表权威定义见 [orthogonal-refactoring §5.3](orthogonal-refactoring.md#5-语义精准化重铸与术语规范)；
 2. **自造术语首用必须带一句人话释义**（内联括注或「人话」通道）：实验证据显示，术语即使附上定义，仍会降低处理流畅性与读者卷入度 [3]——所以治理靠限量而非只靠加注，新增自造术语须走 RSI 评审并挂首用释义；
 3. **单段新术语 ≤ 2 个**：工作记忆按组块计费，每个首读可见的陌生术语各占一个组块 [4]；
-4. **能平实说清的不造术语**：无谓的复杂词汇会让作者显得更不聪明 [5]；「低熵」「熵增负债」这类自造词，首用处必须让外行能顺出意思，必要时直接用平实表达替换（知识的诅咒是对晦涩行文的最佳单一解释 [6]）。
+4. **能平实说清的不造术语**：无谓的复杂词汇会让作者显得更不聪明 [5]；W3C COGA 的 Use Clear Words 模式同样要求不自造新词，生僻术语须删去或解释 [8]；「低熵」「熵增负债」这类自造词，首用处必须让外行能顺出意思，必要时直接用平实表达替换（知识的诅咒是对晦涩行文的最佳单一解释 [6]）。
 
 ## 4. 双通道条目模板
 
@@ -77,11 +77,11 @@ N. **<条目名（Canonical English Name）>**：<单句判定规则：条件 + 
 
 ## 6. 改动验证
 
-改写提交前过四查（命令以 `origin/main...HEAD` 为例）：
+改写提交前过四查。命令以工作区对 merge-base 的差异为准（`B=$(git merge-base origin/main HEAD)`，含未提交改动；新增文件先 `git add -N`）：
 
-1. **标题零触碰**：`git diff origin/main...HEAD -- SKILL.md README.md references/ docs/ | grep -E '^[+-]#{1,6} '`，输出必须为空；
+1. **标题零触碰**：`git diff $B --diff-filter=M -- SKILL.md README.md references/ docs/ | grep -E '^[+-]#{1,6} '`，输出必须为空（新增文件的标题不计）；
 2. **16 词台账**：对 [rsi-hook §5](rsi-hook.md#5-核验门禁) G3 反刷分词表（必须/严禁/绝不/禁止/不得/不可/一律/仅限/严格/强制/铁律/硬约束/门禁/全绿/不放行/未通过）逐文件计数，任何 LOSS 须在同文件真实判定句中补位；
-3. **行数预算**：`git diff --numstat origin/main...HEAD` 合计，不含本规约新增文件的净增 ≤ 60 行；
+3. **行数预算**：`git diff --numstat $B -- . ':(exclude)references/plain-expression.md' | awk '{a+=$1;d+=$2} END {print a-d}'`，净增 ≤ 60 行（不含本规约新增文件）；
 4. **外行盲评**：至少 1 个未读过本仓的全新上下文代理盲读五问（复述要求 / 不懂词数 / 违反后果 / 愿意读 1–5 / 复述判定规则），新版任一题更差则该段回炉，不得以「整体更好」豁免单段。
 
 ---
@@ -100,6 +100,6 @@ N. **<条目名（Canonical English Name）>**：<单句判定规则：条件 + 
 
 [6] S. Pinker, *The Sense of Style: The Thinking Person's Guide to Writing in the 21st Century*. New York, NY, USA: Viking, 2014.
 
-[7] Government Digital Service, "Style guide," *GOV.UK*. [Online]. Available: https://www.gov.uk/guidance/style-guide
+[7] Government Digital Service, "A to Z style guide," *GOV.UK content and publishing guidance*. [Online]. Available: https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/style-guides/a-to-z-style-guide/
 
 [8] W3C, "Making content usable for people with cognitive and learning disabilities," *W3C Working Group Note*. [Online]. Available: https://www.w3.org/TR/coga-usable/
