@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.0] - 2026-10-09
+
+### Added
+
+- 新增 [references/plain-expression.md](references/plain-expression.md)：本仓文本表达质感 SSOT，涵盖读者四结果（ISO 24495-1）、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与四条禁则、改动验证四查，附 8 条 IEEE 参考文献。
+
+### Changed
+
+- [SKILL.md](SKILL.md) 叙述区改写：重构十铁律与易错点各附一句「人话」复述（判定规则语义不变，不降级任何模态词）；分流矩阵、双代理核验与 Phase 0–2、Phase 5 各段先给一句问题陈述；「边界与触发契约」拆为三段；SSOT 指针索引登记新手册。标题、冻结面与 16 词硬约束台账零变动。
+
 ## [1.0.2] - 2026-09-30
 
 ### Added
