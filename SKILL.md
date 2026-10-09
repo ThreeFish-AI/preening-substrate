@@ -12,25 +12,27 @@ allowed-tools: Read Write Edit Glob Grep Bash
 
 # 梳理清减（Preening Substrate）
 
-唯一目标：以目标项目当前工程实况为事实基准，遵循 **「先全面梳理与护栏锚定，再提炼核心、正交分解，最后激进剪枝与独立对抗核验」** 的认知演进法则，通过可判定、可回滚、可度量的六阶段自治流水线剥离偶然复杂性（Accidental Complexity），交付**外部行为严格等价、职责边界正交内聚、命名语义精准规范**的低熵模块代码与《梳理清减交付报告》。**Refactorer** = 主 Agent（架构测绘、正交分解与外科手术清减执行者）；**Verifier Subagent** = 独立行为等价性、二阶涟漪效应与度量对账核验员。
+唯一目标：把复杂模块改回简单，同时让外部行为严格等价。路径是三步：先看清全貌并立好测试护栏，再提炼本质、按独立变化的方向做正交分解，最后激进剪枝，交由独立 Verifier 核验。全程走可判定、可回滚、可度量的六阶段自治流水线，以目标项目当前工程实况为事实基准，剥离偶然复杂性（Accidental Complexity，实现方式带来、问题本身并不需要的复杂度），交付职责边界清晰、命名准确的低熵（结构清晰、冗余少）模块代码与《梳理清减交付报告》。
+
+**Refactorer** = 主 Agent，负责架构测绘、正交分解与外科手术式清减；**Verifier Subagent** = 独立核验者，负责行为等价性、二阶涟漪效应与度量对账。
 
 ## 重构铁律（全程硬约束）
 
-1. **先全貌，后动刀（Exhaustive Mapping Before Mutation）**：必须先完成全局资产盘点、入站/出站依赖测绘与熵增负债审计（Phase 0–2）并落盘记录；未建立完整拓扑图谱前，严禁修改任何业务代码。
-   > 人话：动刀前先把全屋量完、画好图；图纸没画完，一刀不下。凭印象删代码，删掉的常常是别人踩坑换来的护栏。
+1. **先全貌，后动刀（Exhaustive Mapping Before Mutation）**：必须先完成全局资产盘点、入站/出站依赖测绘与熵增负债（浅模块、透传层、死代码、失真命名等拖累后续改动的结构性欠账）审计（Phase 0–2）并落盘记录；未建立完整拓扑图谱前，严禁修改任何业务代码。
+   > 人话：动刀前先把全屋量完、画好图，图纸没画完一刀不下；凭印象删代码，删掉的常常是别人踩坑换来的护栏。
 2. **无护栏，不重构（No Refactoring Without Seam Protection）**：重构以可观测行为严格等价为铁律。若目标模块缺乏自动化测试覆盖，必须在 Phase 0 先于软件接缝（Seams，即能替换实现、观察行为的接点）处补齐锁定当前真实行为的特征化测试（Characterization Tests / Golden Master，把现有输入-输出拍成快照当比对基准）并实跑全绿。无基线护栏，严禁进入结构变更（见 [verification-and-delivery §1](references/verification-and-delivery.md#1-phase-0-预检分流与特征化测试护栏)）。
    > 人话：拆老房子前先给每面墙拍照存档——改坏了有照片对得出来；没照片，吵到天亮也说不清。
 3. **切斯特顿围栏先考古（Chesterton's Fence Archaeology）**：删除任何非常规分支、防御性兜底、时序延迟或看似怪异的兼容逻辑前，必先经 `git log -S` / `git blame` 与 Issue 记录查明其历史引入初衷。未证伪其现实必要性前，严禁盲目剪除（见 [context-and-audit §3](references/context-and-audit.md#3-切斯特顿围栏chestertons-fence考古规程)）。
-   > 人话：看见路上有栅栏，先查清是谁立的、为什么立；查不清就别拆。很多怪代码防的是真实发生过的线上事故。
+   > 人话：看见路上有栅栏，先查清是谁立的、为什么立，查不清就别拆；很多怪代码防的是真实发生过的线上事故。
 4. **动态引用四维必查（Dynamic Reference Quad-Check）**：静态 `Grep` 零命中，绝不等同于死代码。物理删除或私有化任何符号前，必须完成四维排查：框架反射/DI 容器、序列化/ORM 映射、配置/CLI 字符串绑定、动态导出表与跨仓按名契约（见 [context-and-audit §2](references/context-and-audit.md#2-隐式依赖与动态引用四维雷达)）。
-   > 人话：搜不到引用不等于没人用——框架可能在运行时按名字调它，配置文件可能按字符串绑它。四条暗道查完才能拆。
+   > 人话：搜不到引用不等于没人用——框架可能在运行时按名字调它，配置文件可能按字符串绑它，四条暗道查完才能拆。
 5. **深模块重塑与反碎片化（Deep Modules over Shallow Fragmentation）**：正交分解旨在最大化「功能深度 / 接口复杂度」之比（深模块：接口简单，内涵丰富）。严禁将内聚逻辑撕裂为大量互相暴露内部状态的浅模块（Shallow Modules）或单实现接口套娃（见 [orthogonal-refactoring §1](references/orthogonal-refactoring.md#1-概念主体正交化与深模块重塑)）。
    > 人话：好模块像充电宝——插口就两个，里面电路再复杂也不归你管；拆成一堆互相掏内脏的小盒子，只会更难用。
 6. **正交轴向与单一事实源（Parnas Orthogonal Axes & SSOT）**：按独立变化维度（机制 Mechanism vs. 策略 Policy、领域内核 vs. 基础设施）解耦模块，保持单向无环依赖。任何业务概念、状态与规则仅留唯一权威定义源（SSOT），调用端一律通过明确导出指针引用。
    > 人话：总是一起改的代码放同一个屋，互不打扰的分屋住；一条规则全仓库只写一遍，别处需要就来引用。
-7. **双阶段帽子与两振出局回退（Structural/Pruning Hats & 2-Strike Rollback）**：改结构与删代码分两步走，各自独立验证，严禁混在同一次修改里。
+7. **双阶段帽子与两振出局回退（Structural/Pruning Hats & 2-Strike Rollback）**：改结构与剪枝分两步走，各自独立验证，严禁混在同一次修改里（Fowler「两顶帽子」（Two Hats）的出处与适配说明见 [orthogonal-refactoring §0](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）。
    - Phase 3 戴「结构重塑帽」：只做拆分、合并、搬迁与引用切换，函数内部细粒度逻辑保持不变；
-   - Phase 4 换「清减内联帽」：在已跑绿的新结构上，再执行删除与内联（Two Hats 出处与适配说明见 [orthogonal-refactoring §0](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）；
+   - Phase 4 换「清减内联帽」：在已跑绿的新结构上，再执行死代码剪枝与透传内联；
    - 每完成一个微步即跑测试：连续 2 次红灯，立即回退至上一绿灯锚点并缩小步幅，严禁在红灯状态下叠加修改；
    - 回退命令白名单：仅允许限定 pathspec 的 `git checkout -- <pathspec>` 与 `git stash push/pop`；全程严禁 `rm -rf`、`git reset --hard`、`git clean`、`git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase` 等破坏性命令。
    > 人话：一次只戴一顶帽子——搬家具的时候别顺手扔东西；连续两次撞墙，说明步子迈大了，退回去拆成小步再走。
@@ -54,12 +56,12 @@ allowed-tools: Read Write Edit Glob Grep Bash
   > 人话：笔记是给「失忆后的自己」留的——上下文一压缩，落盘文件就是全部记忆。
 - **警惕测试替身幻觉（Mocking Illusion）**：补写特征化测试时，优先锁定模块公开入口的真实输入-输出行为契约；禁止用过度 Mock 将测试写成与旧内部实现死锁的同义反复（Tautological Mock）——否则一重构内部结构，测试就假性崩盘。
   > 人话：测试锁的是「对外给什么、还什么」，不是「内部怎么算」；锁错了对象，重构就被误伤。
-- **专业术语保持 Canonical English**：重铸标识符、注释与交付报告时，行业公认技术术语（如 `Harness`, `Agent`, `Runtime`, `Pipeline`, `Substrate`, `Prompt`, `Checkpoint` 等）直接保留英文原词，严禁生硬直译或自造歧义缩写（完整词表以 [orthogonal-refactoring §5.3](references/orthogonal-refactoring.md#5-语义精准化重铸与术语规范) 为权威定义）。
+- **专业术语保持 Canonical English**：重铸标识符、注释与交付报告时，行业公认技术术语（如 `Harness`, `Agent`, `Runtime`, `Pipeline`, `Substrate`, `Prompt`, `Checkpoint` 等）直接保留英文原词，严禁生硬直译或自造歧义缩写（判定原则与示例词见 [orthogonal-refactoring §5 第 3 条](references/orthogonal-refactoring.md#5-语义精准化重铸与术语规范)）。
 - **遵循目标仓库治理**：执行全程遵循目标项目 AGENTS.md / CLAUDE.md 的 Git、包管理与测试规范；宿主未自动注入时须在 Phase 0 主动读取。
 
 ## 输入分流与爆炸半径矩阵
 
-改动的风险取决于它会波及多大范围（爆炸半径：一次失误可能殃及的代码面）。按下表定级，级越高，流程越重：
+改动的风险取决于它会波及多大范围（爆炸半径：一次失误可能殃及的代码面）。按下表定级，每一级对应不同的阶段裁剪与执行策略：
 
 | 目标类型与爆炸半径 | 判定特征 | 阶段裁剪与执行策略 |
 | :--- | :--- | :--- |
@@ -128,7 +130,7 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 
 ### Phase 5 · 对抗核验与量化交付
 
-> 必读：[verification-and-delivery §2–§4](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验)；[plain-expression §1–§4](references/plain-expression.md#1-读者四结果)（交付报告叙述区等全部用户可见文字适用）
+> 必读：[verification-and-delivery §2–§4](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验)；[plain-expression §1–§3](references/plain-expression.md#1-读者四结果)（适用于交付报告叙述区，适用范围见 [§0](references/plain-expression.md#0-定位适用范围与冻结面)）
 
 顺序是：先自己全量自检，再交独立盲审，最后整理交付。
 
@@ -143,7 +145,7 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 | [references/context-and-audit.md](references/context-and-audit.md) | Phase 1、Phase 2 开始前 | 资产与拓扑测绘、动态引用四维雷达、Chesterton's Fence 考古、Parnas 变化维度矩阵、Ousterhout 浅模块与透传层定量审计 |
 | [references/orthogonal-refactoring.md](references/orthogonal-refactoring.md) | Phase 3、Phase 4 开始前 | 双阶段帽子步法与两振出局回退规程（适配自 Fowler Two Hats）、深模块重塑、机制与策略解耦、SSOT 收敛与兼容垫片、激进剪枝与 Canonical English 语义重铸 |
 | [references/verification-and-delivery.md](references/verification-and-delivery.md) | Phase 0、Phase 5 开始前 | Feathers 特征化测试护栏、独立 Verifier 四维盲审（Quad-Gate）核查表、防 Goodhart 异化的多维熵减度量体系、标准化《梳理清减交付报告》模板 |
-| [references/plain-expression.md](references/plain-expression.md) | Phase 5 撰写交付报告叙述区前；修改本仓任何文本前 | 本仓文本表达质感 SSOT：读者四结果、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与禁则、改动验证 |
+| [references/plain-expression.md](references/plain-expression.md) | Phase 5 撰写交付报告叙述区前；撰写 RSI PR 正文前；修改本 Skill 的 SKILL.md / references / README 文本前 | 本 Skill 文本表达质感 SSOT：读者四结果、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与禁则、改动验证 |
 | [references/rsi-hook.md](references/rsi-hook.md) | 首次 RSI 捕获、用户要求或交付后派发前 | 本 Skill 跨会话自我改进（RSI）协议、G0–G4 核验门禁与 PR 规范 |
 | [evals/trigger-evals.json](evals/trigger-evals.json) | 维护或优化 `description` 触发边界时 | 27 条正负双向路由触发评测集（13 应触发 + 14 近邻不触发） |
 | [evals/evals.json](evals/evals.json) | 维护或回归验证本 Skill 端到端行为时 | 7 大典型工程重构场景的端到端验收契约集 |

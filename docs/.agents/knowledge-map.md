@@ -17,7 +17,7 @@
 | [references/context-and-audit.md](../../references/context-and-audit.md) | `Phase 1` · `Phase 2` | 公开契约与入站/出站拓扑测绘、动态引用四维雷达、Chesterton's Fence Git 考古规程、Brooks 本质复杂性萃取、Parnas 变化维度矩阵、Ousterhout 浅模块与透传层定量审计 |
 | [references/orthogonal-refactoring.md](../../references/orthogonal-refactoring.md) | `Phase 3` · `Phase 4` | 双阶段帽子（适配自 Fowler Two Hats）与 2-Strike 微步回退状态机、深模块重塑、机制与策略（Mechanism vs. Policy）解耦、SSOT 收敛、向后兼容重导出垫片（Deprecation Shims）、激进死代码剪枝与 Canonical English 语义重铸 |
 | [references/verification-and-delivery.md](../../references/verification-and-delivery.md) | `Phase 0` · `Phase 5` | Feathers 特征化测试（Characterization Tests / Golden Master）接缝护栏、独立 Verifier Subagent 四门禁盲审清单（Quad-Gate / Gate 1–4）、防 Goodhart 异化的多维熵减量化指标与标准化《梳理清减交付报告》模板 |
-| [references/plain-expression.md](../../references/plain-expression.md) | `Phase 5` · `文本修改（横切）` | 本仓文本表达质感 SSOT：读者四结果（ISO 24495-1）、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与四条禁则、改动验证四查 |
+| [references/plain-expression.md](../../references/plain-expression.md) | `Phase 5` · `文本修改（横切）` | 本 Skill 文本表达质感 SSOT：读者四结果（ISO 24495-1）、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与四条禁则、改动验证四查 |
 | [references/rsi-hook.md](../../references/rsi-hook.md) | `RSI（横切）` | 跨会话自我改进（Recursive Self-Improvement）协议：触发白名单、`.temp/preening-substrate-rsi/` 旁路捕获、Steward ↔ Verifier 五道核验门禁（G0–G4）、背压限流与 PR 模板 |
 
 ## 3. 评测集与工程治理台账 (Evaluation Suites & Governance)

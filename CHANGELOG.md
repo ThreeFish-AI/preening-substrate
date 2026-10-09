@@ -8,11 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- 新增 [references/plain-expression.md](references/plain-expression.md)：本仓文本表达质感 SSOT，涵盖读者四结果（ISO 24495-1）、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与四条禁则、改动验证四查，附 8 条 IEEE 参考文献。
+- 新增 [references/plain-expression.md](references/plain-expression.md)：本 Skill 文本表达质感 SSOT，涵盖读者四结果（ISO 24495-1）、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与四条禁则、改动验证四查，附 8 条 IEEE 参考文献。
 
 ### Changed
 
-- [SKILL.md](SKILL.md) 叙述区改写：重构十铁律与易错点各附一句「人话」复述（判定规则语义不变，不降级任何模态词）；分流矩阵、双代理核验与 Phase 0–2、Phase 5 各段先给一句问题陈述；「边界与触发契约」拆为三段；SSOT 指针索引登记新手册。标题、冻结面与 16 词硬约束台账零变动。
+- [SKILL.md](SKILL.md) 叙述性文字改写：重构十铁律各附一句「人话」复述，易错点中「过程记录」「测试替身」两条同附（判定规则语义不变，不降级任何模态词；铁律 7 把原「分步执行」直接写成「严禁混在同一次修改里」，并把 Fowler 出处括注改为指向 [orthogonal-refactoring §0](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退) 的指针）；开篇「唯一目标」段改写为结论先行的三步式并给「偶然复杂性」「低熵」补首用释义（原「认知演进法则」长句拆入三步，「正交内聚」由铁律 6 与 Phase 3 承载），铁律 1 给「熵增负债」补首用释义；分流矩阵、双代理核验与 Phase 0–2 各段先给一句问题陈述，Phase 3 开篇点明「只动结构」，Phase 5 开篇交代执行顺序；「边界与触发契约」拆为四段；SSOT 指针索引登记新手册。标题零触碰，冻结面除 README 仓库结构树新增 1 行登记外零变动，16 词硬约束台账无 LOSS（SKILL.md「严禁」+1，见铁律 7）。
 
 ## [1.0.2] - 2026-09-30
 
