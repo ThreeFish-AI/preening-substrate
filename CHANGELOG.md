@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.4] - 2026-10-11
+
+### Changed
+
+- RSI 协议上收至统一仓库 [ThreeFish-AI/rsi](https://github.com/ThreeFish-AI/rsi)，本仓保留触发契约与不变量清单：[references/rsi-hook.md](references/rsi-hook.md) 整替为指针 stub，SKILL.md RSI 章节压缩为薄指针，捕获目录迁移至 `.temp/rsi/preening-substrate/`。
+
 ## [1.0.3] - 2026-10-09
 
 ### Added
