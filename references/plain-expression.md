@@ -8,7 +8,7 @@
 
 ## 0. 定位、适用范围与冻结面
 
-本规约治理以下人类可读文本：[SKILL.md](../SKILL.md)、`references/` 全部手册、[README](../README.md)、交付报告叙述区（Agent 按模板填写的说明性文字，模板本身整块冻结）与 [RSI PR 正文](rsi-hook.md#9-pr-模板)。表达合格的标准始终是读者结果，不是文风偏好，分两条线：**下限**是读者拿到需要的、找得到需要的、首读就懂、拿来能用 [1]；**上限**是读者读完带得走画面、说得出好在哪（§7）。两线同验，缺一即不合格。
+本规约治理以下人类可读文本：[SKILL.md](../SKILL.md)、`references/` 全部手册、[README](../README.md)、交付报告叙述区（Agent 按模板填写的说明性文字，模板本身整块冻结）与 RSI PR 正文（模板见统一协议 [ThreeFish-AI/rsi §11](https://github.com/ThreeFish-AI/rsi/blob/main/references/protocol.md#11-pr-模板)）。表达合格的标准始终是读者结果，不是文风偏好，分两条线：**下限**是读者拿到需要的、找得到需要的、首读就懂、拿来能用 [1]；**上限**是读者读完带得走画面、说得出好在哪（§7）。两线同验，缺一即不合格。
 
 **冻结面清单**（承载既有契约，改写一律绕行；冻结面内的历史措辞不受本规约追溯）：
 
@@ -80,7 +80,7 @@ N. **<条目名（Canonical English Name）>**：<判定规则：条件 + 模态
 改写提交前过四查。命令以工作区对 merge-base 的差异为准（`B=$(git merge-base origin/main HEAD)`，含未提交改动；新增文件先 `git add -N`）：
 
 1. **标题零触碰**：`git diff $B --diff-filter=M -- SKILL.md README.md references/ docs/ | grep -E '^[+-]#{1,6} '`，输出必须为空（新增文件的标题不计）；
-2. **16 词台账**：对 [rsi-hook §5](rsi-hook.md#5-核验门禁) G3 反刷分脚本所列词表逐文件计数（脚本原式以 `origin/main...<分支>` 取差，不含未提交改动；对工作区核对时，把脚本里 `D=` 与 `EMPTY DIFF` 判定行的取差，换成以本节 `$B` 对单个文件取差，即 `git diff -U0 $B -- <file>` 与 `git diff --numstat $B -- <file>`，词表循环不变），任何 LOSS 须在同文件真实判定句中补位；
+2. **16 词台账**：对统一 RSI 协议 [§5 核验门禁](https://github.com/ThreeFish-AI/rsi/blob/main/references/protocol.md#5-核验门禁) G3 反刷分脚本所列词表逐文件计数（脚本原式以 `origin/main...<分支>` 取差，不含未提交改动；对工作区核对时，把脚本里 `D=` 与 `EMPTY DIFF` 判定行的取差，换成以本节 `$B` 对单个文件取差，即 `git diff -U0 $B -- <file>` 与 `git diff --numstat $B -- <file>`，词表循环不变），任何 LOSS 须在同文件真实判定句中补位；
 3. **行数预算**：`git diff --numstat $B -- . ':(exclude)references/plain-expression.md' | awk '{a+=$1;d+=$2} END {print a-d}'`，净增 ≤ 60 行（不含本规约新增文件）；
 4. **外行盲评**：至少 1 个未读过本 Skill 的全新上下文代理盲读七问，先读后问（问题在代理读毕后出示，防预埋好句）：① 复述要求；② 不懂词数；③ 违反后果；④ 愿意读 1–5；⑤ 复述判定规则；⑥ 劲句指认——引出最有劲的一句原话，并指认它用的是 §7 哪一手（具象 / 类比 / 节奏），引文须 grep 原文命中；⑦ 画面复述——凭记忆复述至少一个画面或类比，复述须含至少一处与原文不同而语义等价的措辞。①–⑤ 为对比判据：新版任一题更差则该段回炉，不得以「整体更好」豁免单段；⑥–⑦ 为达标判据（首轮改写无旧版基线，不走对比）：说不出手法或复述不出画面即回炉，空泛称赞（「写得很好」）不计为通过。
 

@@ -57,7 +57,7 @@ ln -sfn ~/projects/preening-substrate ~/.gemini/config/skills/preening-substrate
 ### 名字即契约
 [ThreeFish-AI/negentropy](https://github.com/ThreeFish-AI/negentropy) 的 routine preset `preening_substrate` 以「使用 Skill 工具调用 `preening-substrate` 技能」按名消费本技能；技能名称、输入契约及交付报告**四大核心板块标题**保持 100% 向后兼容稳定（板块内的度量行与核验清单允许增量演进）。
 
-**RSI 自我改进**：执行过程中由用户指出或 Agent 捕获的本 Skill 规约缺陷会旁路记录于 `.temp/preening-substrate-rsi/backlog.md`、不打断重构主流程；交付后由 Steward 与独立 Verifier 经五道门禁（G0–G4）核验并向用户一次性确认后，方以 PR 回馈本仓库（详见 [references/rsi-hook.md](references/rsi-hook.md)）。
+**RSI 自我改进**：执行过程中由用户指出或 Agent 捕获的本 Skill 规约缺陷会旁路记录于 `.temp/rsi/preening-substrate/backlog.md`、不打断重构主流程；交付后按统一 RSI 协议（[ThreeFish-AI/rsi](https://github.com/ThreeFish-AI/rsi)）核验并向用户一次性确认后，方以 PR 回馈本仓库（本仓指针见 [references/rsi-hook.md](references/rsi-hook.md)）。
 
 ---
 
@@ -73,7 +73,7 @@ ln -sfn ~/projects/preening-substrate ~/.gemini/config/skills/preening-substrate
 | **Phase 3** | **正交分解与深模块重塑**（[orthogonal-refactoring §0–§3](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）：戴「结构重塑帽」，按变化轴拆解概念主体、合并连体浅类锻造深模块；解耦机制与策略；收敛 SSOT；L3 跨模块变更同步迁移调用点或加兼容垫片 | Refactorer 小步结构迁移 + 两振出局（2-Strike）回滚护栏 | 模块呈单向无环依赖（DAG）；SSOT 唯一；入站调用点或兼容垫片就绪；阶段测试全绿 |
 | **Phase 4** | **代码清减与语义规范化**（[orthogonal-refactoring §4–§5](references/orthogonal-refactoring.md#4-激进剪枝与过度封装拍平)）：换戴「清减内联帽」，物理剪除死代码与废弃分支；拍平单实现接口套娃与 Pass-Through 透传函数；重铸精准领域命名并保留 Canonical English 术语 | Refactorer 外科手术清减 + 静态检查与测试实跑 | 死代码与透传层清零；模糊命名（`Manager`/`Utils` 等）全部重铸；Lint/Typecheck 与测试全绿 |
 | **Phase 5** | **对抗核验与量化交付**（[verification-and-delivery §2–§4](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验)）：派发全新只读 Verifier 盲审测试等价性、二阶防震、死引用清零与度量真实性；清理 `.temp/preening-<slug>-lab/` 内临时脚本（保留自忽略的 4 份审计回执）并交付报告 | Refactorer 汇总 ↔ **Verifier Subagent** 四门禁盲审（Quad-Gate） | 四道核验门禁（Gate 1–4）全绿；输出标准化《梳理清减交付报告》 |
-| **RSI（横切）** | **自我改进钩子**（[rsi-hook](references/rsi-hook.md)）：旁路捕获本 Skill 规约缺陷，交付后隔离 clone 最小修复并独立核验，经确认提 PR | Steward Subagent 改进 ↔ Verifier Subagent 核验（G0–G4） | G0–G4 全绿并经用户一次性确认后提 PR，否则仅输出报告 |
+| **RSI（横切）** | **自我改进钩子**（[rsi-hook](references/rsi-hook.md) 指针）：旁路捕获本 Skill 规约缺陷，交付后调用统一 `rsi` skill 走 Steward / Verifier / Context-Reviewer 回路，经确认提 PR | 统一 RSI 协议（[ThreeFish-AI/rsi](https://github.com/ThreeFish-AI/rsi)）承载门禁与状态机 | 门禁全绿并经用户一次性确认后提 PR，否则仅输出报告 |
 
 ---
 
@@ -85,7 +85,7 @@ references/context-and-audit.md            # Phase 1–2 规约 SSOT（拓扑测
 references/orthogonal-refactoring.md       # Phase 3–4 规约 SSOT（双阶段帽子与两振出局回退 / 深模块重塑 / 机制与策略分离 / SSOT 与兼容垫片 / 激进剪枝与语义重铸）
 references/verification-and-delivery.md    # Phase 0 & 5 规约 SSOT（Feathers 特征化测试护栏 / 独立 Verifier 四门禁盲审 / 多维熵减度量 / 标准化交付报告模板）
 references/plain-expression.md             # 文本表达质感 SSOT（读者四结果 / 句构三律 / 术语治理 / 双通道条目模板 / 改写筛选与禁则 / 表达力四维 / 改动验证）
-references/rsi-hook.md                     # RSI 自我改进钩子协议 SSOT（触发白名单 / 旁路捕获 / G0–G4 核验门禁 / PR 模板与降级矩阵）
+references/rsi-hook.md                     # RSI 自我改进钩子协议指针 stub（协议 SSOT 已上收至统一仓库 ThreeFish-AI/rsi）
 evals/trigger-evals.json                   # 触发边界评测集（13 正向应触发 + 14 近邻不触发，用于校验 description 路由精度）
 evals/evals.json                           # 端到端任务评测集（7 大重构场景：L1 单文件清减 / L2 正交重组 / L4 无测试遗产护栏 / L3 跨模块兼容垫片 / 动态反射排雷 / Dry-Run / 职责边界）
 docs/.agents/knowledge-map.md              # 仓库文档与知识索引
