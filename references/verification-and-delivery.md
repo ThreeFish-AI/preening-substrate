@@ -31,7 +31,7 @@ git rev-parse HEAD
 wc -l <目标模块文件列表>
 ```
 
-> **回退安全边界**：后续所有微步回退（见 [orthogonal-refactoring §0](orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）只允许触及本流水线自身引入的变更；若 Phase 0 已登记「含未提交改动」，回退前必须先以 `git stash create` 或 `git diff > .temp/preening-<slug>-lab/wip-snapshot.patch` 留档用户 WIP，严禁直接丢弃。
+> **回退安全边界**：后续所有微步回退（见 [orthogonal-refactoring §0](orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）只允许触及本流水线自身引入的变更；若 Phase 0 已登记「含未提交改动」，回退前必须先留档用户 WIP——以 `git stash push -m <唯一tag>`（记下返回的条目 SHA，恢复用 `apply`、用毕 `drop`）或 `git diff > .temp/preening-<slug>-lab/wip-snapshot.patch` 留档；`git stash create` 只产出悬空提交、不进 stash 栈，无法取回，严禁使用。严禁直接丢弃用户 WIP。
 
 ### 1.2 Feathers 特征化测试护栏（Characterization Tests & Seams）
 遵循 Michael Feathers 在 *Working Effectively with Legacy Code* 中的软件接缝（Seam）理论 [3]，对目标模块的测试保护度进行分流处置：
