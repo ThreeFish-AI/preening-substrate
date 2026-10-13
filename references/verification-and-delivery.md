@@ -33,7 +33,7 @@ wc -l <目标模块文件列表>
 
 > **公开契约表回填**：`baseline.md` 需含「公开契约表」节，供 Gate 2 契约对照（见 [§2.2](#22-四维盲审核查表-quad-gate-audit-checklist)）。Phase 0 时该表允许为空节占位——Phase 1 完成时**必须**从 `topology-and-audit.md` 的公开契约节（[context-and-audit §1.1](context-and-audit.md#11-资产清单与公开契约边界-public-surface-inventory)）回填；未回填的替代路径是把该节直接纳入 Verifier 输入包（[§2.1](#21-verifier-subagent-派发契约) 第 5 项），否则 Gate 2 无对照基线、门禁无法判定。
 
-> **回退安全边界**：后续所有微步回退（见 [orthogonal-refactoring §0](orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）只允许触及本流水线自身引入的变更；若 Phase 0 已登记「含未提交改动」，回退前必须先留档用户 WIP——以 `git stash push -m <唯一tag>`（记下返回的条目 SHA，恢复用 `apply`、用毕 `drop`）或 `git diff > .temp/preening-<slug>-lab/wip-snapshot.patch` 留档；`git stash create` 只产出悬空提交、不进 stash 栈，无法取回，严禁使用。严禁直接丢弃用户 WIP。
+> **回退安全边界**：后续所有微步回退（见 [orthogonal-refactoring §0](orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）只允许触及本流水线自身引入的变更；若 Phase 0 已登记「含未提交改动」，回退前必须先留档用户 WIP——以 `git stash push -m <唯一tag>`（按 tag 查出条目 SHA，恢复用 `apply --index`、用毕 `drop`，细则见上引回退白名单 ②）或 `git diff HEAD > .temp/preening-<slug>-lab/wip-snapshot.patch`（须带 `HEAD`，否则漏掉已暂存的 WIP；未跟踪文件不在其内）留档；`git stash create` 只产出悬空提交、不进 stash 栈，无法取回，严禁使用。严禁直接丢弃用户 WIP。
 
 ### 1.2 Feathers 特征化测试护栏（Characterization Tests & Seams）
 遵循 Michael Feathers 在 *Working Effectively with Legacy Code* 中的软件接缝（Seam）理论 [3]，对目标模块的测试保护度进行分流处置：
