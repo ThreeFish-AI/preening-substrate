@@ -16,9 +16,11 @@
 2. **微步验证与两振出局回滚（2-Strike Rollback）**：
    - 每次修改控制在单一正交概念或单一重构手法（如 Move Function、Inline Class、Rename Symbol）粒度；
    - 每完成一个微步即运行目标测试套件：
-     - **绿灯（PASS）**：保留当前修改，并**必须**以本地 checkpoint commit 固化绿灯锚点（`git add -A && git commit --no-verify -m "wip: <phase>-<n>"`，至迟每完成一个概念主体迁移即打一次），随后继续下一微步；
+     - **绿灯（PASS）**：保留当前修改，并**必须**立即打一次绿灯锚点（至迟每完成一个概念主体迁移即打一次），随后继续下一微步。锚点形态按宿主权限分两档，**一律针对本微步在 `progress.md` 登记过的文件清单操作，严禁使用 `git add -A`**——它会把 Phase 0 已登记的用户未提交 WIP 一并混入锚点，使「本流水线自身引入的变更」无法区分：
+       - **默认档 · 暂存区锚点**（宿主或用户规则禁止 commit 时同样适用）：`git add -- <本微步登记的文件清单>`，暂存区即「上一绿灯」状态的权威副本，供红灯回退（见下与回退白名单）；
+       - **commit 档**：仅当用户或目标仓规则允许 commit 时，在同一份清单上以 `git commit -- <同清单> -m "wip: <phase>-<n>"` 固化可命名 checkpoint（目标仓 pre-commit hooks 未获用户豁免时不加 `--no-verify`）；
      - **第 1 次红灯（FAIL）**：仅允许针对刚才那一步修改引发的导入路径或签名遗漏做 1 次即时修正；
-     - **连续第 2 次红灯（2nd FAIL）**：**严禁继续在红灯状态下打补丁或猜测性修改**！必须立即执行 `git checkout <上一绿灯SHA> -- <本微步修改过的文件>` 回退（无 checkpoint 时，仅回退本微步在 `progress.md` 登记过的文件清单，并立即补打 checkpoint），将刚才的重构步骤拆解为更小粒度的子步骤重新推进。
+     - **连续第 2 次红灯（2nd FAIL）**：**严禁继续在红灯状态下打补丁或猜测性修改**！必须立即回退本微步在 `progress.md` 登记过的文件清单——commit 档执行 `git checkout <上一绿灯SHA> -- <本微步修改过的文件>`，暂存区锚点档执行 `git checkout -- <本微步修改过的文件>`（自暂存区恢复绿灯态）；回退后按上文对应形态立即补打锚点，将刚才的重构步骤拆解为更小粒度的子步骤重新推进。
    - **回退命令白名单（全程硬约束）**：仅允许限定 pathspec 的 `git checkout -- <pathspec>` / `git checkout <SHA> -- <pathspec>` 与 `git stash push/pop`；严禁 `rm -rf`、`git reset --hard`、`git clean`、`git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase`——回退只许触及本流水线自身引入的变更，严禁波及 Phase 0 之前已存在的用户未提交内容。
 
 ---
