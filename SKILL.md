@@ -34,7 +34,7 @@ allowed-tools: Read Write Edit Glob Grep Bash
    - Phase 3 戴「结构重塑帽」：只做拆分、合并、搬迁与引用切换，函数内部细粒度逻辑保持不变；
    - Phase 4 换「清减内联帽」：在已跑绿的新结构上，再执行死代码剪枝与透传内联；
    - 每完成一个微步即跑测试：连续 2 次红灯，立即回退至上一绿灯锚点并缩小步幅，严禁在红灯状态下叠加修改；
-   - 回退命令白名单（完整清单以 [orthogonal-refactoring §0](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退) 为唯一权威）：仅允许 ① 限定 pathspec 的 `git checkout -- <pathspec>` / `git checkout <SHA> -- <pathspec>`；② 以唯一 tag 落栈的 `git stash push` / `apply` / `drop`（多 worktree 共享栈严禁裸 `pop`）；③ 删除本微步新增文件仅限 `rm -- <progress.md 登记的精确路径>`（无递归）；全程严禁 `rm -rf`、`git reset --hard`、`git clean`、裸 `git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase` 等破坏性命令。
+   - 回退命令白名单（完整清单以 [orthogonal-refactoring §0](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退) 为唯一权威）：仅允许 ① 限定 pathspec 的 `git checkout -- <pathspec>` / `git checkout <SHA> -- <pathspec>`；② 以唯一 tag 落栈的 `git stash push` / `apply --index` / `drop`（多 worktree 共享栈严禁裸 `pop`）；③ 删除本微步新增文件仅限 `rm -- <progress.md 登记的精确路径>`（无递归）；全程严禁 `rm -rf`、`git reset --hard`、`git clean`、裸 `git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase` 等破坏性命令。
    > 人话：一次只戴一顶帽子——搬家具的时候别顺手扔东西；连续两次撞墙，说明步子迈大了，退回去拆成小步再走。
 8. **反指标作弊（Anti-Objective Hacking）**：严禁通过删除、注释、`@skip` 或放宽既有测试断言来换取测试全绿；严禁为刷高 LOC 净减少率而将清晰的多行逻辑压缩为晦涩难读的单行黑魔法。
    > 人话：把体温计放冰水里「退烧」不算治病——指标好看不等于代码变好。
