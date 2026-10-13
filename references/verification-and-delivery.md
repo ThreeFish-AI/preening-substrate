@@ -31,6 +31,8 @@ git rev-parse HEAD
 wc -l <目标模块文件列表>
 ```
 
+> **公开契约表回填**：`baseline.md` 需含「公开契约表」节，供 Gate 2 契约对照（见 [§2.2](#22-四维盲审核查表-quad-gate-audit-checklist)）。Phase 0 时该表允许为空节占位——Phase 1 完成时**必须**从 `topology-and-audit.md` 的公开契约节（[context-and-audit §1.1](context-and-audit.md#11-资产清单与公开契约边界-public-surface-inventory)）回填；未回填的替代路径是把该节直接纳入 Verifier 输入包（[§2.1](#21-verifier-subagent-派发契约) 第 5 项），否则 Gate 2 无对照基线、门禁无法判定。
+
 > **回退安全边界**：后续所有微步回退（见 [orthogonal-refactoring §0](orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）只允许触及本流水线自身引入的变更；若 Phase 0 已登记「含未提交改动」，回退前必须先留档用户 WIP——以 `git stash push -m <唯一tag>`（记下返回的条目 SHA，恢复用 `apply`、用毕 `drop`）或 `git diff > .temp/preening-<slug>-lab/wip-snapshot.patch` 留档；`git stash create` 只产出悬空提交、不进 stash 栈，无法取回，严禁使用。严禁直接丢弃用户 WIP。
 
 ### 1.2 Feathers 特征化测试护栏（Characterization Tests & Seams）
@@ -54,11 +56,12 @@ wc -l <目标模块文件列表>
 为杜绝 Refactorer（主 Agent）既改代码又自己打勾验收的确认偏误（Confirmation Bias），Phase 5 必须执行**双代理对抗核验**——独立 evaluator 的价值已在多代理编排实践中得到验证 [4]。
 
 ### 2.1 Verifier Subagent 派发契约
-主 Agent 派发一个**全新只读上下文**的 `Verifier Subagent`（或 `research` 子代理），输入严格限制为以下四项客观材料（**绝不传入主 Agent 的重构自评或辩解**）：
-1. `.temp/preening-<slug>-lab/baseline.md`（重构前 Git SHA、公开契约表、原始测试基准）；
+主 Agent 派发一个**全新只读上下文**的 `Verifier Subagent`（或 `research` 子代理），输入严格限制为以下客观材料（第 1–4 项必附，第 5 项仅按条件附加；**绝不传入主 Agent 的重构自评或辩解**）：
+1. `.temp/preening-<slug>-lab/baseline.md`（重构前 Git SHA、公开契约表（Phase 1 完成时自 `topology-and-audit.md` 回填，见 [§1.1](#11-工作区初始化与基线采集)）、原始测试基准）；
 2. `git diff <baseline_sha>` 与 `git diff --stat <baseline_sha>`——**对工作区取全量变更**（已提交 + 未提交，不依赖变更是否已 commit）；untracked 新文件（特征化测试、新建模块文件）先以 `git add -N` 标记纳入 diff，或附 `git status --porcelain` 清单一并交验；
 3. 重构后实跑测试套件与静态检查（Linter / Typecheck）的终端原始输出日志；
-4. 下方 §2.2 的《四维盲审核查表》。
+4. 下方 §2.2 的《四维盲审核查表》；
+5. （仅当 `baseline.md` 公开契约表未回填时）`topology-and-audit.md` 的公开契约节，作为 Gate 2 的替代对照基线。
 
 ### 2.2 四维盲审核查表 (Quad-Gate Audit Checklist)
 
@@ -67,7 +70,7 @@ Verifier Subagent 必须逐项核对并向主 Agent 出具回执（`.temp/preeni
 | 核验维度 | 确定性通过判据（任一不满足即判 `REJECT`） | 核验方法与命令证据 |
 | :--- | :--- | :--- |
 | **Gate 1 · 测试防篡改与等价性** | 既有业务测试与 Phase 0 特征化测试 100% 通过；**未发生删减有效测试断言、`@skip` 屏蔽用例、或放宽断言精度的 Objective Hacking**（仅随合法内部符号重命名同步更新导入路径除外） | `git diff <baseline_sha> -- tests/` 逐行审阅（覆盖工作区未提交变更）+ 实跑测试日志 |
-| **Gate 2 · 公开契约与二阶涟漪防震** | 模块对外 Public API 签名、返回值语义、序列化字段（JSON/Pydantic/ORM）、CLI/配置文件键名及跨仓按名调用入口（如 `negentropy`）零意外破坏；若有跨模块重命名，全仓入站调用已迁移完毕或已保留重导出兼容垫片 | 对比 `baseline.md` 公开契约表与当前导出表；对原符号名执行全仓 `Grep` 确认无悬挂调用 |
+| **Gate 2 · 公开契约与二阶涟漪防震** | 模块对外 Public API 签名、返回值语义、序列化字段（JSON/Pydantic/ORM）、CLI/配置文件键名及跨仓按名调用入口（如 `negentropy`）零意外破坏；若有跨模块重命名，全仓入站调用已迁移完毕或已保留重导出兼容垫片 | 对比 `baseline.md` 公开契约表（未回填时改用 `topology-and-audit.md` 公开契约节）与当前导出表；对原符号名执行全仓 `Grep` 确认无悬挂调用 |
 | **Gate 3 · 代码卫生与可读性不退步** | 零悬挂导入（Orphan Imports）、零未定义符号、零循环导入；未出现为刷低 LOC 而将清晰多行逻辑塞成一行的反模式；注释精简且无残留的注释掉的代码块 | 静态检查（`ruff check` / `mypy` / `tsc --noEmit`）零报错 + Diff 人工审阅 |
 | **Gate 4 · 度量数据真实性对账** | 拟交付报告中的改造前/后 LOC、文件数、净减少行数与优化率，与 `wc -l` 及 `git diff --numstat` 实测数值**逐字精确一致**（零估算、零虚构） | 核对 `wc -l` 与 `git diff --stat` 真实数字 |
 
