@@ -22,6 +22,7 @@
      - **第 1 次红灯（FAIL）**：仅允许针对刚才那一步修改引发的导入路径或签名遗漏做 1 次即时修正；
      - **连续第 2 次红灯（2nd FAIL）**：**严禁继续在红灯状态下打补丁或猜测性修改**！必须立即回退本微步在 `progress.md` 登记过的文件清单——commit 档执行 `git checkout <上一绿灯SHA> -- <本微步修改过的文件>`，暂存区锚点档执行 `git checkout -- <本微步修改过的文件>`（自暂存区恢复绿灯态）；回退后按上文对应形态立即补打锚点，将刚才的重构步骤拆解为更小粒度的子步骤重新推进。
    - **回退命令白名单（全程硬约束；本条为唯一权威清单，[SKILL.md 铁律 7](../SKILL.md#重构铁律全程硬约束) 仅为其压缩视图）**：仅允许 ① 限定 pathspec 的 `git checkout -- <pathspec>` / `git checkout <SHA> -- <pathspec>`；② 以唯一 tag 落栈的 `git stash push -m <唯一tag>`（记下返回的条目 SHA，恢复用 `git stash apply <条目>`，用毕 `git stash drop <条目>`）——多 worktree 共享 stash 栈的宿主上**严禁裸 `git stash pop`**，它会弹出其他会话压入的条目；③ 删除本微步新增文件仅限 `rm -- <progress.md 登记的精确路径>`（逐文件、无递归，路径必须逐字来自登记清单）。严禁 `rm -rf`、`git reset --hard`、`git clean`、裸 `git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase`——回退只许触及本流水线自身引入的变更，严禁波及 Phase 0 之前已存在的用户未提交内容。
+   - **共享工作区并行防护（宿主 worktree 隔离未真正生效时）**：多个实现子代理落在同一工作区并行改动时，锚点与回退仍以「本微步在 `progress.md` 登记的文件清单」为唯一操作面——`git add` 与回退一律限定本清单 pathspec（严禁 `git add -A`），并把「各并行子代理的文件清单互斥无交集」作为并行推进的前置条件；否则他人改动会被混入锚点或误遭回退。
 
 ---
 
