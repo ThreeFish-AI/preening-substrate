@@ -4,7 +4,7 @@ description: 对目标代码模块或子系统执行「预检护栏 → 全面�
 license: MIT
 compatibility: 适用于 Claude Code、Antigravity 等支持 Agent Skills 开放标准的宿主，并严格兼容 ThreeFish-AI/negentropy 的 preening_substrate 预设调用契约。依赖 git（基线锚定、Chesterton's Fence 历史溯源与微步回滚）、bash 及目标项目的测试与静态检查工具链（Python 优先 uv run，JS/TS 优先 pnpm）。Subagent 独立派发为推荐增强，单 Agent 运行时按文内角色隔离降级路径执行；allowed-tools 有意不含 Subagent 派发工具（Task/Agent）——未列入仅意味着不预授权，派发时按宿主正常权限流程请求，被拒即按单 Agent 角色隔离降级路径执行。
 metadata:
-  version: "1.0.5"
+  version: "1.0.6"
   author: ThreeFish-AI
   source: "migrated and evolved from user-level slash command ~/.claude/commands/preening-substrate.md"
 allowed-tools: Read Write Edit Glob Grep Bash
@@ -34,7 +34,7 @@ allowed-tools: Read Write Edit Glob Grep Bash
    - Phase 3 戴「结构重塑帽」：只做拆分、合并、搬迁与引用切换，函数内部细粒度逻辑保持不变；
    - Phase 4 换「清减内联帽」：在已跑绿的新结构上，再执行死代码剪枝与透传内联；
    - 每完成一个微步即跑测试：连续 2 次红灯，立即回退至上一绿灯锚点并缩小步幅，严禁在红灯状态下叠加修改；
-   - 回退命令白名单：仅允许限定 pathspec 的 `git checkout -- <pathspec>` 与 `git stash push/pop`；全程严禁 `rm -rf`、`git reset --hard`、`git clean`、`git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase` 等破坏性命令。
+   - 回退命令白名单（完整清单以 [orthogonal-refactoring §0](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退) 为唯一权威）：仅允许 ① 限定 pathspec 的 `git checkout -- <pathspec>` / `git checkout <SHA> -- <pathspec>`；② 以唯一 tag 落栈的 `git stash push` / `apply --index` / `drop`（多 worktree 共享栈严禁裸 `pop`）；③ 删除本微步新增文件仅限 `rm -- <progress.md 登记的精确路径>`（无递归）；全程严禁 `rm -rf`、`git reset --hard`、`git clean`、裸 `git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase` 等破坏性命令。
    > 人话：一次只戴一顶帽子——搬家具的时候别顺手扔东西；连续两次撞墙，说明步子迈大了，退回去拆成小步再走。
 8. **反指标作弊（Anti-Objective Hacking）**：严禁通过删除、注释、`@skip` 或放宽既有测试断言来换取测试全绿；严禁为刷高 LOC 净减少率而将清晰的多行逻辑压缩为晦涩难读的单行黑魔法（清减准绳见 [orthogonal-refactoring §4 第 4 条](references/orthogonal-refactoring.md#4-激进剪枝与过度封装拍平)）。
    > 人话：把体温计放冰水里「退烧」不算治病——指标好看不等于代码变好。
@@ -48,7 +48,7 @@ allowed-tools: Read Write Edit Glob Grep Bash
 改动的人不给自己打分：动手的 Refactorer 与验收的 Verifier 分离，Verifier 只认证据、不认自辩。
 
 - **宿主适配**：检验方（Verifier Subagent）一律在 Phase 5 以全新只读上下文派发；单 Agent 运行时以角色隔离近似（强制从磁盘重读 `git diff` 与测试日志）并在交付报告中显式标注「非隔离核验」，发现回归照修不误。
-- **输入隔离**：派给 Verifier 的输入仅限 Baseline 快照（`.temp/preening-<slug>-lab/baseline.md`）、`git diff <baseline_sha>`（对工作区取全量变更：已提交 + 未提交；untracked 新文件先以 `git add -N` 标记或附 `git status --porcelain` 清单一并交验）、当前测试运行实况输出及 [verification-and-delivery §2](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验) 核查表；**绝不附带 Refactorer 的重构自辩或主观推断**。
+- **输入隔离**：派给 Verifier 的输入仅限 Baseline 快照（`.temp/preening-<slug>-lab/baseline.md`）、`git diff <baseline_sha>`（对工作区取全量变更：已提交 + 未提交；untracked 新文件先以 `git add -N` 标记或附 `git status --porcelain` 清单一并交验）、当前测试运行实况输出及 [verification-and-delivery §2](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验) 核查表；仅当 `baseline.md` 公开契约表未回填时，另附 `topology-and-audit.md` 公开契约节作 Gate 2 替代对照基线（[verification-and-delivery §2.1](references/verification-and-delivery.md#21-verifier-subagent-派发契约) 第 5 项）；**绝不附带 Refactorer 的重构自辩或主观推断**。
 
 ## 易错点（Gotchas）
 
@@ -71,6 +71,10 @@ allowed-tools: Read Write Edit Glob Grep Bash
 | **L4 · 无测试存量泥球** | 目标模块核心路径测试覆盖率为 0 或测试已损坏，且充斥全局状态与隐式副作用 | Phase 0 强制阻断结构搬迁：先提取软件接缝（Seam）建立 Golden Master 特征化测试护栏并跑绿；Phase 3–4 降级为极小步原子演进 |
 | **Dry-Run / 仅梳理诊断** | 用户明确声明「只梳理全貌与审计方案，暂不改代码」 | 执行 Phase 0 → Phase 2（全程零写入：Phase 0 仅登记既有测试实况与基线、不新增任何项目文件，特征化护栏延后至正式执行时补建），向用户输出《全貌梳理与正交分解方案》后安全停机 |
 
+**文档/规约为主的目标**（Skill 仓、规约仓：少量脚本 + 大量 Markdown 规约 + 冻结模板）：仍按上表定级。「测试覆盖率」判定特征，以仓内文档门替代特征化测试：文档门是针对文档的机器检查，如链接与锚点校验、行数预算、词表 ledger。度量把代码行与文档行分列，LOC 优化率只对代码行计。目标仓内承载契约、不容改写的文本，重构一律绕行；判定方式见 [plain-expression §0 冻结面](references/plain-expression.md#0-定位适用范围与冻结面)（frontmatter 触发契约、标题行、既有代码块与模板等属此类）。
+
+**整仓多子目标**：slug 仍取单一一名；各子目标独立按上表定级，交付报告「核心结论」逐一列出各子目标的爆炸半径级别与关键结论，量化表按子目标分列。
+
 ## 阶段验收与自治流转对照总表
 
 Phase 0–4 免阻塞自治推进，Phase 5 完整交付。开工时把下表转写为进度清单（`progress.md` 恒为落盘回执，随产随存；有 TodoWrite 等任务工具时同步用作会话内可视增强）；每个阶段门禁全绿，才可勾选并进入下一阶段。
@@ -78,7 +82,7 @@ Phase 0–4 免阻塞自治推进，Phase 5 完整交付。开工时把下表转
 | 阶段 | 验收标准 (Exit Criteria) |
 | :--- | :--- |
 | **Phase 0 · 预检分流与特征化测试护栏** | Git 基线 SHA 与原始 LOC/文件数已登记入 `baseline.md`；脏工作区预检完成（见 [verification-and-delivery §1.1](references/verification-and-delivery.md#11-工作区初始化与基线采集)）；爆炸半径分流（L1–L4）已判定；既有测试或新增特征化测试（Characterization Tests）实跑全绿（Dry-Run 模式豁免：仅登记既有测试实况） |
-| **Phase 1 · 全面梳理与拓扑测绘** | 公开契约清单、上下游入站/出站调用拓扑、全局状态副作用及动态引用四维雷达表已完备落盘至 `topology-and-audit.md` |
+| **Phase 1 · 全面梳理与拓扑测绘** | 公开契约清单、上下游入站/出站调用拓扑、全局状态副作用及动态引用四维雷达表已完备落盘至 `topology-and-audit.md`；公开契约清单已回填 `baseline.md` 公开契约表（Gate 2 对照基线） |
 | **Phase 2 · 核心提炼与熵增审计** | 本质复杂性内核、Parnas 变化维度矩阵（机制 vs. 策略）、Chesterton's Fence 考古结论及待清理负债清单（浅模块/透传层/死代码/模糊命名）逐项带 `文件:行号` 锚点落盘 |
 | **Phase 3 · 正交分解与深模块重塑** | 概念主体按变化轴正交解耦且保持单向无环依赖；SSOT 权威定义源唯一；跨模块变更已同步全仓调用点或配置兼容垫片；阶段测试全绿 |
 | **Phase 4 · 代码清减与语义规范化** | 经考古证伪的死代码与无价值 Pass-Through 透传层已物理剪除/内联；标识符语义精准且符合 Canonical English 规范；静态检查（Lint/Typecheck）与测试全绿 |
@@ -102,7 +106,7 @@ flowchart LR
 
 > 必读：[verification-and-delivery §0–§1](references/verification-and-delivery.md#0-验证黄金准则与反异化防线)
 
-Phase 0 回答一个问题：动刀之前，护栏立好了吗？创建 `.temp/preening-<slug>-lab/`（首建写 `*` 的 `.gitignore`），把当前 Git `HEAD` SHA、原始代码行数（LOC）与文件清单记入 `baseline.md`；完成脏工作区预检（`git status --porcelain` 非空时先请用户 commit / stash，或经授权将未提交改动纳入行为基线并登记于 `baseline.md`）；按分流矩阵定级（L1–L4）。随后运行目标模块相关测试套件；若测试缺失或覆盖不足以保护核心分支，立即在软件接缝（Seam）处编写锁定当前输入-输出行为的特征化测试并实跑全绿，固化 Baseline 护栏。**Dry-Run 模式豁免**：仅登记既有测试实况与基线，不新增任何项目文件（含测试文件）。
+Phase 0 回答一个问题：动刀之前，护栏立好了吗？创建 `.temp/preening-<slug>-lab/`（首建写 `*` 的 `.gitignore`），把当前 Git `HEAD` SHA、原始代码行数（LOC）与文件清单记入 `baseline.md`（公开契约表先留空节占位，Phase 1 回填）；完成脏工作区预检（`git status --porcelain` 非空时先请用户 commit / stash，或经授权将未提交改动纳入行为基线并登记于 `baseline.md`）；按分流矩阵定级（L1–L4）。随后运行目标模块相关测试套件；若测试缺失或覆盖不足以保护核心分支，立即在软件接缝（Seam）处编写锁定当前输入-输出行为的特征化测试并实跑全绿，固化 Baseline 护栏。**Dry-Run 模式豁免**：仅登记既有测试实况与基线，不新增任何项目文件（含测试文件）。
 
 ### Phase 1 · 全面梳理与拓扑测绘
 
@@ -135,7 +139,7 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 顺序是：先自己全量自检，再交独立盲审，最后整理交付。
 
 1. **全量自检**：运行完整单元测试、集成测试与静态类型/Lint 检查；统计重构前后多维熵减指标。
-2. **独立 Verifier 盲审**：派发全新 Verifier Subagent（仅给 `baseline.md`、`git diff`、测试实测日志与核查表），逐项审计：① 原有测试断言零删减零弱化；② Public API、序列化与动态反射契约零断裂；③ 悬挂导入与死引用清零；④ 交付报告中的 LOC、文件数与净减少率与 `git diff --stat` 严格一致。未过项立即修复重审。
+2. **独立 Verifier 盲审**：派发全新 Verifier Subagent（仅给 `baseline.md`、`git diff`、测试实测日志与核查表；契约表未回填时另附 `topology-and-audit.md` 公开契约节，见 [verification-and-delivery §2.1](references/verification-and-delivery.md#21-verifier-subagent-派发契约) 第 5 项），逐项审计：① 原有测试断言零删减零弱化；② Public API、序列化与动态反射契约零断裂；③ 悬挂导入与死引用清零；④ 交付报告中的 LOC、文件数与净减少率与 `git diff --stat` 严格一致。未过项立即修复重审。
 3. **交付与归档**：清理 `.temp/preening-<slug>-lab/` 内临时脚本（保留自忽略的 4 份核心审计回执供溯源与评测，严禁误删 `.temp/rsi/`），按 [verification-and-delivery §4](references/verification-and-delivery.md#4-标准化梳理清减交付报告模板) 输出《梳理清减交付报告》（若项目有提交约定或用户要求提交，则按 `/commit` 规范原子化提交）。
 
 ## 引用与指针索引 (Single Source of Truth)

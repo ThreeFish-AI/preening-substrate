@@ -14,12 +14,15 @@
    - 在 **Phase 3** 中，只做概念主体的拆分/合并、机制与策略的边界解耦、函数/类的物理迁移以及单一事实源（SSOT）引用切换，**保持算子内部细粒度逻辑不变**；完成迁移后必须立即运行测试护栏确认全绿。
    - 在 **Phase 4** 中，在已稳定的新正交结构上，再执行死代码物理删除、Pass-Through 透传层内联、冗余分支化简与标识符重命名。
 2. **微步验证与两振出局回滚（2-Strike Rollback）**：
-   - 每次修改控制在单一正交概念或单一重构手法（如 Move Function、Inline Class、Rename Symbol）粒度；
+   - 每次修改控制在单一正交概念或单一重构手法（如 Move Function、Inline Class、Rename Symbol）粒度，动手前必须先把本微步将触碰的文件清单（含将新建的文件）追加登记到 `progress.md`——下文锚点、回退与 `rm --` 都只认这份清单，微步内发现新的触碰点时即时补登记进清单；
    - 每完成一个微步即运行目标测试套件：
-     - **绿灯（PASS）**：保留当前修改，并**必须**以本地 checkpoint commit 固化绿灯锚点（`git add -A && git commit --no-verify -m "wip: <phase>-<n>"`，至迟每完成一个概念主体迁移即打一次），随后继续下一微步；
+     - **绿灯（PASS）**：保留当前修改，并**必须**立即打一次绿灯锚点（至迟每完成一个概念主体迁移即打一次），随后继续下一微步。锚点形态按宿主权限分两档，**一律针对本微步在 `progress.md` 登记过的文件清单操作，严禁使用 `git add -A`**——它会把 Phase 0 已登记的用户未提交 WIP 一并混入锚点，使「本流水线自身引入的变更」无法区分：
+       - **默认档 · 暂存区锚点**（宿主或用户规则禁止 commit 时同样适用）：`git add -- <本微步登记的文件清单>`，暂存区即「上一绿灯」状态的权威副本，供红灯回退（见下与回退白名单）；
+       - **commit 档**：仅当用户或目标仓规则允许 commit 时，在同一份清单上以 `git commit -m "wip: <phase>-<n>" -- <同清单>` 固化可命名 checkpoint（`-m` 必须写在 `--` 之前，否则会被当作 pathspec 报错；清单内本微步新增的未跟踪文件须先 `git add -- <该文件>`；目标仓 pre-commit hooks 未获用户豁免时不加 `--no-verify`）；
      - **第 1 次红灯（FAIL）**：仅允许针对刚才那一步修改引发的导入路径或签名遗漏做 1 次即时修正；
-     - **连续第 2 次红灯（2nd FAIL）**：**严禁继续在红灯状态下打补丁或猜测性修改**！必须立即执行 `git checkout <上一绿灯SHA> -- <本微步修改过的文件>` 回退（无 checkpoint 时，仅回退本微步在 `progress.md` 登记过的文件清单，并立即补打 checkpoint），将刚才的重构步骤拆解为更小粒度的子步骤重新推进。
-   - **回退命令白名单（全程硬约束）**：仅允许限定 pathspec 的 `git checkout -- <pathspec>` / `git checkout <SHA> -- <pathspec>` 与 `git stash push/pop`；严禁 `rm -rf`、`git reset --hard`、`git clean`、`git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase`——回退只许触及本流水线自身引入的变更，严禁波及 Phase 0 之前已存在的用户未提交内容。
+     - **连续第 2 次红灯（2nd FAIL）**：**严禁继续在红灯状态下打补丁或猜测性修改**！必须立即回退本微步在 `progress.md` 登记过的文件清单——commit 档执行 `git checkout <上一绿灯SHA> -- <本微步修改过的文件>`，暂存区锚点档执行 `git checkout -- <本微步修改过的文件>`（自暂存区恢复绿灯态）。本微步新建的文件（暂存区锚点档：尚未 `git add`；commit 档：上一绿灯 SHA 中不存在）不得放进 `checkout` 的 pathspec：它会让整条命令中止，同一命令里的已跟踪文件也不会被恢复。这类文件改按回退白名单 ③ 以 `rm --` 逐个删除。回退后按上文对应形态立即补打锚点（清单中不再含已删除的文件），将刚才的重构步骤拆解为更小粒度的子步骤重新推进。
+   - **回退命令白名单（全程硬约束；本条为唯一权威清单，[SKILL.md 铁律 7](../SKILL.md#重构铁律全程硬约束) 仅为其压缩视图）**：仅允许 ① 限定 pathspec 的 `git checkout -- <pathspec>` / `git checkout <SHA> -- <pathspec>`；② 以唯一 tag 落栈的 `git stash push -m <唯一tag>`（`push` 不回显条目 SHA，随后以 `git stash list --format='%H %gs'` 按 tag 查出；恢复用 `git stash apply --index <SHA>`，缺 `--index` 会丢掉暂存区锚点；用毕按 tag 重新查出当前序号，`git stash drop stash@{n}`，`drop` 不接受 SHA）——多 worktree 共享 stash 栈的宿主上**严禁裸 `git stash pop`**，它会弹出其他会话压入的条目；③ 删除本微步新增文件仅限 `rm -- <progress.md 登记的精确路径>`（逐文件、无递归，路径必须逐字来自登记清单）。严禁 `rm -rf`、`git reset --hard`、`git clean`、裸 `git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase`——回退只许触及本流水线自身引入的变更，严禁波及 Phase 0 之前已存在的用户未提交内容。
+   - **共享工作区并行防护（宿主 worktree 隔离未真正生效时）**：多个实现子代理落在同一工作区并行改动时，锚点与回退仍以「本微步在 `progress.md` 登记的文件清单」为唯一操作面——`git add` 与回退一律限定本清单 pathspec（严禁 `git add -A`），并把「各并行子代理的文件清单互斥无交集」作为并行推进的前置条件；否则他人改动会被混入锚点或误遭回退。
 
 ---
 

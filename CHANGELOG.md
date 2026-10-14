@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.6] - 2026-10-14
+
+### Added
+
+- 分流矩阵补两条款（RSI-20261013-04）：「文档/规约为主的目标」以文档门（链接与锚点校验、行数预算、词表 ledger）替代特征化测试，度量把代码行与文档行分列且 LOC 优化率只对代码行计，冻结面文本一律绕行；「整仓多子目标」slug 仍取单一一名，交付报告核心结论逐一列出各子目标爆炸半径级别、量化表按子目标分列。
+- Gate 2 公开契约表回填链路（RSI-20261013-03）：[verification-and-delivery §1.1](references/verification-and-delivery.md#11-工作区初始化与基线采集) 声明 `baseline.md` 公开契约表 Phase 0 空节占位、Phase 1 完成时自 `topology-and-audit.md` 公开契约节回填，未回填时该节改入 Verifier 输入包（§2.1 第 5 项）作 Gate 2 替代对照基线；SKILL.md 不变量段「输入隔离」与盲审步骤补同一条件性例外，Phase 0/1 出闸表述同步，README Phase 1 验收标准同步。
+
+### Changed
+
+- 绿灯锚点改双档机制（RSI-20261013-01）：默认暂存区锚点（`git add --` 登记清单），仅当用户或目标仓允许 commit 时打 checkpoint；严禁 `git add -A` 混入 Phase 0 已登记的用户 WIP，红灯回退与补锚点措辞同步两档形态。
+- 三处回退白名单统一（RSI-20261013-02）：[orthogonal-refactoring §0](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退) 为唯一权威，SKILL.md 铁律 7 压缩视图对齐——stash 改为唯一 tag 落栈 `push` / `apply --index` / `drop` 并严禁共享工作区裸 `pop`，补「删除微步新增文件仅限 `rm --` 登记精确路径（无递归）」，VD §1.1 的 `git stash create`（悬空提交不可取回）改为 `git stash push -m <唯一tag>` 留档并以 `git diff HEAD > wip-snapshot.patch` 为替代；微步动手前先把将触碰（含将新建）的文件登记进 `progress.md`，微步内发现新触碰点即时补登记。
+- 共享工作区并行防护（RSI-20261013-05）：OR §0 补条款——宿主 worktree 隔离未真正生效时，锚点与回退仅以本微步 `progress.md` 登记文件清单为操作面，各并行子代理文件清单互斥为并行推进前置条件。
+- SKILL.md frontmatter 版本升至 1.0.6。
+
 ## [1.0.5] - 2026-10-14
 
 ### Added
