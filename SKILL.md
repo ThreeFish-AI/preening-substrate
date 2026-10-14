@@ -4,7 +4,7 @@ description: 对目标代码模块或子系统执行「预检护栏 → 全面�
 license: MIT
 compatibility: 适用于 Claude Code、Antigravity 等支持 Agent Skills 开放标准的宿主，并严格兼容 ThreeFish-AI/negentropy 的 preening_substrate 预设调用契约。依赖 git（基线锚定、Chesterton's Fence 历史溯源与微步回滚）、bash 及目标项目的测试与静态检查工具链（Python 优先 uv run，JS/TS 优先 pnpm）。Subagent 独立派发为推荐增强，单 Agent 运行时按文内角色隔离降级路径执行；allowed-tools 有意不含 Subagent 派发工具（Task/Agent）——未列入仅意味着不预授权，派发时按宿主正常权限流程请求，被拒即按单 Agent 角色隔离降级路径执行。
 metadata:
-  version: "1.0.5"
+  version: "1.0.6"
   author: ThreeFish-AI
   source: "migrated and evolved from user-level slash command ~/.claude/commands/preening-substrate.md"
 allowed-tools: Read Write Edit Glob Grep Bash
@@ -48,7 +48,7 @@ allowed-tools: Read Write Edit Glob Grep Bash
 改动的人不给自己打分：动手的 Refactorer 与验收的 Verifier 分离，Verifier 只认证据、不认自辩。
 
 - **宿主适配**：检验方（Verifier Subagent）一律在 Phase 5 以全新只读上下文派发；单 Agent 运行时以角色隔离近似（强制从磁盘重读 `git diff` 与测试日志）并在交付报告中显式标注「非隔离核验」，发现回归照修不误。
-- **输入隔离**：派给 Verifier 的输入仅限 Baseline 快照（`.temp/preening-<slug>-lab/baseline.md`）、`git diff <baseline_sha>`（对工作区取全量变更：已提交 + 未提交；untracked 新文件先以 `git add -N` 标记或附 `git status --porcelain` 清单一并交验）、当前测试运行实况输出及 [verification-and-delivery §2](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验) 核查表；**绝不附带 Refactorer 的重构自辩或主观推断**。
+- **输入隔离**：派给 Verifier 的输入仅限 Baseline 快照（`.temp/preening-<slug>-lab/baseline.md`）、`git diff <baseline_sha>`（对工作区取全量变更：已提交 + 未提交；untracked 新文件先以 `git add -N` 标记或附 `git status --porcelain` 清单一并交验）、当前测试运行实况输出及 [verification-and-delivery §2](references/verification-and-delivery.md#2-phase-5-独立-verifier-盲审与二阶效应核验) 核查表；仅当 `baseline.md` 公开契约表未回填时，另附 `topology-and-audit.md` 公开契约节作 Gate 2 替代对照基线（[verification-and-delivery §2.1](references/verification-and-delivery.md#21-verifier-subagent-派发契约) 第 5 项）；**绝不附带 Refactorer 的重构自辩或主观推断**。
 
 ## 易错点（Gotchas）
 
@@ -139,7 +139,7 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 顺序是：先自己全量自检，再交独立盲审，最后整理交付。
 
 1. **全量自检**：运行完整单元测试、集成测试与静态类型/Lint 检查；统计重构前后多维熵减指标。
-2. **独立 Verifier 盲审**：派发全新 Verifier Subagent（仅给 `baseline.md`、`git diff`、测试实测日志与核查表），逐项审计：① 原有测试断言零删减零弱化；② Public API、序列化与动态反射契约零断裂；③ 悬挂导入与死引用清零；④ 交付报告中的 LOC、文件数与净减少率与 `git diff --stat` 严格一致。未过项立即修复重审。
+2. **独立 Verifier 盲审**：派发全新 Verifier Subagent（仅给 `baseline.md`、`git diff`、测试实测日志与核查表；契约表未回填时另附 `topology-and-audit.md` 公开契约节，见 [verification-and-delivery §2.1](references/verification-and-delivery.md#21-verifier-subagent-派发契约) 第 5 项），逐项审计：① 原有测试断言零删减零弱化；② Public API、序列化与动态反射契约零断裂；③ 悬挂导入与死引用清零；④ 交付报告中的 LOC、文件数与净减少率与 `git diff --stat` 严格一致。未过项立即修复重审。
 3. **交付与归档**：清理 `.temp/preening-<slug>-lab/` 内临时脚本（保留自忽略的 4 份核心审计回执供溯源与评测，严禁误删 `.temp/rsi/`），按 [verification-and-delivery §4](references/verification-and-delivery.md#4-标准化梳理清减交付报告模板) 输出《梳理清减交付报告》（若项目有提交约定或用户要求提交，则按 `/commit` 规范原子化提交）。
 
 ## 引用与指针索引 (Single Source of Truth)
