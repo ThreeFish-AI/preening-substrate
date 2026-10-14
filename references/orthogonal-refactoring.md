@@ -87,6 +87,12 @@
    - 消除模块内部不必要的 `Model A -> Dict -> Model B` 往返转换胶水代码。
 3. **控制流扁平化（Guard Clauses over Deep Nesting）**：
    - 使用卫语句（Guard Clauses / Early Return）消除超过 3 层的 `if-else` 金字塔缩进，让主干正常路径（Happy Path）保持顶格清晰直叙。
+4. **以表达舒适度为清减准绳（Comfort over Line Count）**：
+   - 行数下降是清减的结果，不是目标。每处删改以清晰、易读、易懂、完整为取舍标准，行数只在交付度量里对账（见 [verification-and-delivery §3](verification-and-delivery.md#3-多维熵减量化度量体系)）；
+   - 严禁为压低行数把过多步骤折叠进单行，违者在 Gate 3 判 `REJECT`（见 [verification-and-delivery §2.2](verification-and-delivery.md#22-四维盲审核查表-quad-gate-audit-checklist)）。典型形态：多层嵌套三元、一行多条语句、链式 lambda / 推导式套娃、一路到底的管道或正则；
+   - 是否折叠过头，一律以三问为准：任一答「否」即展开；典型形态默认展开，三问全答「是」方可保留。① 首读能否不回头复述这一行做了什么？② 出错时能否单凭这一行定位到出错的那一步？③ 被折叠掉的中间变量，原本命名的意图在这一行里还看得出来吗？
+   - 删的是重复与噪音，不是信息：承载意图的中间变量、必要的 Why 注释与边界说明照留。
+   - ❌ `a if x else b if y else c if z else d`（三层嵌套三元）；✅ 卫语句逐项 `return`，主干顶格直叙。
 
 ---
 

@@ -15,7 +15,7 @@
 | 文档路径 | 覆盖阶段 | 权威内容与理论锚点 |
 | :--- | :--- | :--- |
 | [references/context-and-audit.md](../../references/context-and-audit.md) | `Phase 1` · `Phase 2` | 公开契约与入站/出站拓扑测绘、动态引用四维雷达、Chesterton's Fence Git 考古规程、Brooks 本质复杂性萃取、Parnas 变化维度矩阵、Ousterhout 浅模块与透传层定量审计 |
-| [references/orthogonal-refactoring.md](../../references/orthogonal-refactoring.md) | `Phase 3` · `Phase 4` | 双阶段帽子（适配自 Fowler Two Hats）与 2-Strike 微步回退状态机、深模块重塑、机制与策略（Mechanism vs. Policy）解耦、SSOT 收敛、向后兼容重导出垫片（Deprecation Shims）、激进死代码剪枝与 Canonical English 语义重铸 |
+| [references/orthogonal-refactoring.md](../../references/orthogonal-refactoring.md) | `Phase 3` · `Phase 4` | 双阶段帽子（适配自 Fowler Two Hats）与 2-Strike 微步回退状态机、深模块重塑、机制与策略（Mechanism vs. Policy）解耦、SSOT 收敛、向后兼容重导出垫片（Deprecation Shims）、激进死代码剪枝（以表达舒适度而非行数为清减准绳）与 Canonical English 语义重铸 |
 | [references/verification-and-delivery.md](../../references/verification-and-delivery.md) | `Phase 0` · `Phase 5` | Feathers 特征化测试（Characterization Tests / Golden Master）接缝护栏、独立 Verifier Subagent 四门禁盲审清单（Quad-Gate / Gate 1–4）、防 Goodhart 异化的多维熵减量化指标与标准化《梳理清减交付报告》模板 |
 | [references/plain-expression.md](../../references/plain-expression.md) | `Phase 5` · `文本修改（横切）` | 本 Skill 文本表达质感 SSOT：读者四结果（ISO 24495-1）、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与四条禁则、表达力四维（具象/类比/节奏/AI 腔防治）、改动验证四查 |
 | [references/rsi-hook.md](../../references/rsi-hook.md) | `RSI（横切）` | 指针 stub：RSI 协议 SSOT 已上收至统一仓库 [ThreeFish-AI/rsi](https://github.com/ThreeFish-AI/rsi)（流程、门禁、状态机与 PR 模板见其 `references/protocol.md`），本仓仅保留触发契约（SKILL.md）与适配指针 |

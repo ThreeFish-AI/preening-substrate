@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.5] - 2026-10-14
+
+### Added
+
+- [references/orthogonal-refactoring.md](references/orthogonal-refactoring.md) §4 新增第 4 条「以表达舒适度为清减准绳」：行数下降是清减的结果而非目标；严禁为压低行数把过多步骤折叠进单行，违者在 Gate 3 判 `REJECT`；是否折叠过头一律过「首读可复述 / 出错可定位 / 中间变量意图可见」三问，并明确删的是重复与噪音、不是信息。
+
+### Changed
+
+- [SKILL.md](SKILL.md) 铁律 8、[references/verification-and-delivery.md](references/verification-and-delivery.md) Gate 3 与 [references/plain-expression.md](references/plain-expression.md) §6「行数预算」各挂指针至新增准绳；行数预算补注「预算是上限，不是目标」，覆盖本 Skill 自身文本。
+
 ## [1.0.4] - 2026-10-11
 
 ### Changed
