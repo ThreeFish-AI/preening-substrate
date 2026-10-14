@@ -4,7 +4,7 @@ description: 对目标代码模块或子系统执行「预检护栏 → 全面�
 license: MIT
 compatibility: 适用于 Claude Code、Antigravity 等支持 Agent Skills 开放标准的宿主，并严格兼容 ThreeFish-AI/negentropy 的 preening_substrate 预设调用契约。依赖 git（基线锚定、Chesterton's Fence 历史溯源与微步回滚）、bash 及目标项目的测试与静态检查工具链（Python 优先 uv run，JS/TS 优先 pnpm）。Subagent 独立派发为推荐增强，单 Agent 运行时按文内角色隔离降级路径执行；allowed-tools 有意不含 Subagent 派发工具（Task/Agent）——未列入仅意味着不预授权，派发时按宿主正常权限流程请求，被拒即按单 Agent 角色隔离降级路径执行。
 metadata:
-  version: "1.0.4"
+  version: "1.0.5"
   author: ThreeFish-AI
   source: "migrated and evolved from user-level slash command ~/.claude/commands/preening-substrate.md"
 allowed-tools: Read Write Edit Glob Grep Bash
@@ -36,7 +36,7 @@ allowed-tools: Read Write Edit Glob Grep Bash
    - 每完成一个微步即跑测试：连续 2 次红灯，立即回退至上一绿灯锚点并缩小步幅，严禁在红灯状态下叠加修改；
    - 回退命令白名单（完整清单以 [orthogonal-refactoring §0](references/orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退) 为唯一权威）：仅允许 ① 限定 pathspec 的 `git checkout -- <pathspec>` / `git checkout <SHA> -- <pathspec>`；② 以唯一 tag 落栈的 `git stash push` / `apply --index` / `drop`（多 worktree 共享栈严禁裸 `pop`）；③ 删除本微步新增文件仅限 `rm -- <progress.md 登记的精确路径>`（无递归）；全程严禁 `rm -rf`、`git reset --hard`、`git clean`、裸 `git checkout <sha>`（detach）及对业务仓库的 `git push` / `git rebase` 等破坏性命令。
    > 人话：一次只戴一顶帽子——搬家具的时候别顺手扔东西；连续两次撞墙，说明步子迈大了，退回去拆成小步再走。
-8. **反指标作弊（Anti-Objective Hacking）**：严禁通过删除、注释、`@skip` 或放宽既有测试断言来换取测试全绿；严禁为刷高 LOC 净减少率而将清晰的多行逻辑压缩为晦涩难读的单行黑魔法。
+8. **反指标作弊（Anti-Objective Hacking）**：严禁通过删除、注释、`@skip` 或放宽既有测试断言来换取测试全绿；严禁为刷高 LOC 净减少率而将清晰的多行逻辑压缩为晦涩难读的单行黑魔法（清减准绳见 [orthogonal-refactoring §4 第 4 条](references/orthogonal-refactoring.md#4-激进剪枝与过度封装拍平)）。
    > 人话：把体温计放冰水里「退烧」不算治病——指标好看不等于代码变好。
 9. **契约兼容与二阶防震（Contract Compatibility & Second-Order Integrity）**：跨模块 Public API 发生重命名或签名演进时，必须同步完成全仓入站调用点迁移，或提供显式弃用重导出垫片（Deprecation Shim，旧路径继续可用的转发别名），确保上下游消费端、配置序列化与并发状态生命周期零断裂。
    > 人话：改了门牌号，要么挨家挨户通知到位，要么在原址挂个指路牌——不能让老访客吃闭门羹。

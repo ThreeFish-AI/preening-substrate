@@ -71,7 +71,7 @@ Verifier Subagent 必须逐项核对并向主 Agent 出具回执（`.temp/preeni
 | :--- | :--- | :--- |
 | **Gate 1 · 测试防篡改与等价性** | 既有业务测试与 Phase 0 特征化测试 100% 通过；**未发生删减有效测试断言、`@skip` 屏蔽用例、或放宽断言精度的 Objective Hacking**（仅随合法内部符号重命名同步更新导入路径除外） | `git diff <baseline_sha> -- tests/` 逐行审阅（覆盖工作区未提交变更）+ 实跑测试日志 |
 | **Gate 2 · 公开契约与二阶涟漪防震** | 模块对外 Public API 签名、返回值语义、序列化字段（JSON/Pydantic/ORM）、CLI/配置文件键名及跨仓按名调用入口（如 `negentropy`）零意外破坏；若有跨模块重命名，全仓入站调用已迁移完毕或已保留重导出兼容垫片 | 对比 `baseline.md` 公开契约表（未回填时改用 `topology-and-audit.md` 公开契约节）与当前导出表；对原符号名执行全仓 `Grep` 确认无悬挂调用 |
-| **Gate 3 · 代码卫生与可读性不退步** | 零悬挂导入（Orphan Imports）、零未定义符号、零循环导入；未出现为刷低 LOC 而将清晰多行逻辑塞成一行的反模式；注释精简且无残留的注释掉的代码块 | 静态检查（`ruff check` / `mypy` / `tsc --noEmit`）零报错 + Diff 人工审阅 |
+| **Gate 3 · 代码卫生与可读性不退步** | 零悬挂导入（Orphan Imports）、零未定义符号、零循环导入；未出现为刷低 LOC 而将清晰多行逻辑塞成一行的反模式；注释精简且无残留的注释掉的代码块 | 静态检查（`ruff check` / `mypy` / `tsc --noEmit`）零报错 + Diff 人工审阅（折叠判据见 [orthogonal-refactoring §4 第 4 条](orthogonal-refactoring.md#4-激进剪枝与过度封装拍平)） |
 | **Gate 4 · 度量数据真实性对账** | 拟交付报告中的改造前/后 LOC、文件数、净减少行数与优化率，与 `wc -l` 及 `git diff --numstat` 实测数值**逐字精确一致**（零估算、零虚构） | 核对 `wc -l` 与 `git diff --stat` 真实数字 |
 
 - **闭环修复**：若 Verifier 任一 Gate 返回 `REJECT`，Refactorer 必须按回执定位的 `文件:行号` 就地修复（或回滚问题切片）并重新提请核验，直至四门全绿方可出闸。
