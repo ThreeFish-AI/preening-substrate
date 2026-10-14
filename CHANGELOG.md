@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- [references/orthogonal-refactoring.md](references/orthogonal-refactoring.md) §4 新增第 4 条「以表达舒适度为清减准绳」：行数下降是清减的结果而非目标；严禁为压低行数把过多步骤折叠进单行，违者在 Gate 3 判 `REJECT`；是否折叠过头一律过「首读可复述 / 出错可定位 / 中间变量意图可见」三问，并明确删的是重复与噪音、不是信息。
+- [references/orthogonal-refactoring.md](references/orthogonal-refactoring.md) §4 新增第 4 条「以清晰易读为清减准绳」：行数下降是清减的结果而非目标；严禁为压低行数把过多步骤折叠进单行，违者在 Gate 3 判 `REJECT`；是否折叠过头一律过「首读可复述 / 出错可定位 / 中间变量意图可见」三问，并明确删的是重复与噪音、不是信息。
 
 ### Changed
 
