@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Gate 1 判据操作化（RSI-20261107-01）：[references/verification-and-delivery.md](references/verification-and-delivery.md) §2.2 明确「有效」= 被测对象仍存于工作区；Phase 3/4 合法清除的被测对象（符号、参数、僵尸分支、重复拷贝）所对应的测试删改，须逐条登记入 `baseline.md`「测试变更清单」（仅事实字段，无理由与结论栏），Verifier 先自 `git diff` 独立对账、再逐条复跑只读 `git grep` 证据命令，清单外删改与证据不成立的条目一律 `REJECT`；行为契约兜底要求独立成立的部分断言移入存活测试并登记标识；§2.1 Verifier 输入同步登记该清单；新增 IEEE [5][6]（测试套件最小化综述与最小化损害故障检出的实证研究，支撑删测须证等价覆盖）。
+
 ## [1.0.6] - 2026-10-14
 
 ### Added
