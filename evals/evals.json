@@ -11,7 +11,7 @@
         "baseline.md 记录了重构前 Git HEAD SHA、原始 LOC 与文件数，且 Phase 0 跑通既有测试基线",
         "topology-and-audit.md 包含公开契约清单、动态引用四维雷达排查记录及 Parnas 变化维度矩阵（机制 vs. 策略分离）",
         "Phase 3（结构搬迁）与 Phase 4（剪枝内联）的变更集在 progress.md 或提交序列中可区分（Phase 4 剪枝未夹带职责搬迁）：单实现接口 IChannelService 与无增值 Pass-Through Manager 被内联消除，机制与策略正交分离且保持单向无环依赖",
-        "未删改或弱化任何既有业务测试断言（Zero Objective Hacking）",
+        "原有测试断言零删减零弱化（Zero Objective Hacking）；确有删改时逐条登记入 baseline.md「测试变更清单」并经 Verifier 复核放行，清单外的删改一律判 REJECT",
         "Phase 5 派发全新只读 Verifier Subagent（或单 Agent 显式标注角色隔离）执行 Gate 1~4 核验，输出 verification-receipt.md",
         "最终向用户输出包含四大标准板块（1. 全面梳理与核心提炼摘要、2. 结构性演进对比、3. 熵减量化度量表、4. 验证自证结论）的《梳理清减交付报告》，且表中数字与 git diff --stat 严格一致"
       ]
@@ -84,6 +84,19 @@
         "未创建新子目录、未拆分物理文件、未引入 Deprecation Shim 或任何跨模块迁移",
         "progress.md 中 Phase 1 与 Phase 2 的产物合并落盘（同一份 topology-and-audit.md 完成两阶段内容）",
         "确认无引用的死私有函数与重复正则预处理分支被物理剪除（含动态引用四维雷达排查记录），Phase 4–5 全量执行并输出四大板块《梳理清减交付报告》"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "宿主当前处于 Plan 模式（强制只读，仅允许写宿主 plan 文件），我未声明 Dry-Run。请对 services/ledger/ 模块执行梳理清减：完成全面梳理与核心提炼后，继续正交分解与清减交付。",
+      "expected_output": "识别宿主 Plan 模式与用户明示 Dry-Run 的触发源差异：Phase 0 → Phase 2 按 Dry-Run 的零写入口径只读执行，产物暂存于宿主 plan 文件，流转期间门禁不勾选；获批退出即视为用户放行，不停机，也不重跑 Phase 0 → Phase 2；进入 Phase 3 之前先把暂存产物落盘到 lab 目录并补齐测试护栏，实跑全绿后补勾 Phase 0–2 门禁，未完成前不修改任何业务代码。",
+      "files": [],
+      "expectations": [
+        "用户未声明 Dry-Run 而宿主处于 Plan 模式时，Phase 0 → Phase 2 按 Dry-Run 的零写入口径只读执行，产物暂存于宿主 plan 文件，未实跑测试、未在 Plan 模式下落盘任何 lab 产物",
+        "Phase 0 只做只读采集（HEAD SHA、LOC 与文件清单、git status --porcelain、L1–L4 定级、既有测试清单与运行命令），采集结果与 Phase 1–2 产物按 baseline.md、topology-and-audit.md 的章节结构暂存于宿主 plan 文件，流转期间门禁不勾选、落盘并实跑全绿后补勾",
+        "获批退出 Plan 模式后不停机，也不重跑 Phase 0 → Phase 2：先建 lab 目录（含 .gitignore、progress.md），把暂存内容落盘为 baseline.md 与 topology-and-audit.md，随后实跑既有测试至全绿（测试缺失时先补建特征化测试），全绿后补勾 Phase 0–2 门禁",
+        "落盘时重采 HEAD、LOC 与脏工作区状态，基线以落盘时点为准，并重核暂存的 文件:行号 锚点（审批期间代码若有变动，锚点可能已漂移）",
+        "进入 Phase 3 之前完成暂存产物落盘与测试护栏补齐，未完成严禁修改任何业务代码；Dry-Run 与 Plan 模式同时成立时，按 Dry-Run 停机待命"
       ]
     }
   ]
