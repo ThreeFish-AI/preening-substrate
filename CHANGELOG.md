@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+
+- 宿主 Plan 模式（宿主强制只读）降级路径（RSI-20261107-02）：[SKILL.md](SKILL.md#边界与触发契约) 边界与触发契约补一段，用户未声明 Dry-Run 而宿主处于 Plan 模式时，Phase 0 → Phase 2 按 Dry-Run 零写入口径只读执行，产物暂存于宿主 plan 文件；获批退出即视为放行，不停机、不重跑 Phase 0 → Phase 2；进入 Phase 3 之前必须先落盘到 lab 目录并补齐测试护栏，未完成严禁修改业务代码（铁律 1、铁律 2 判据不变，仅落盘与实跑时点后移）。[context-and-audit §0](references/context-and-audit.md#0-落盘契约与上下文防腐) 新增第 4 条，给出暂存范围、补落盘顺序与锚点重核；SKILL.md Phase 0 段补指针。
+
 ## [1.0.6] - 2026-10-14
 
 ### Added
