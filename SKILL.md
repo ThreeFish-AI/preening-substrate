@@ -152,7 +152,7 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 | [references/plain-expression.md](references/plain-expression.md) | Phase 5 撰写交付报告叙述区前；撰写 RSI PR 正文前；修改本 Skill 的 SKILL.md / references / README 文本前 | 本 Skill 文本表达质感 SSOT：读者四结果、句构三律、术语治理与首用释义、双通道条目模板、改写筛选与禁则、表达力四维、改动验证 |
 | [references/rsi-hook.md](references/rsi-hook.md) | 首次 RSI 捕获、用户要求或交付后派发前 | RSI 协议指针 stub——流程、门禁、状态机与 PR 模板的 SSOT 已上收至统一仓库 [ThreeFish-AI/rsi](https://github.com/ThreeFish-AI/rsi) 的 `references/protocol.md` |
 | [evals/trigger-evals.json](evals/trigger-evals.json) | 维护或优化 `description` 触发边界时 | 27 条正负双向路由触发评测集（13 应触发 + 14 近邻不触发） |
-| [evals/evals.json](evals/evals.json) | 维护或回归验证本 Skill 端到端行为时 | 7 大典型工程重构场景的端到端验收契约集 |
+| [evals/evals.json](evals/evals.json) | 维护或回归验证本 Skill 端到端行为时 | 8 大典型工程重构场景的端到端验收契约集 |
 
 维护仓库（RSI PR 唯一目标）：[ThreeFish-AI/preening-substrate](https://github.com/ThreeFish-AI/preening-substrate)
 
