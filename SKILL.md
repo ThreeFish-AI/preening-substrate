@@ -106,7 +106,7 @@ flowchart LR
 
 > 必读：[verification-and-delivery §0–§1](references/verification-and-delivery.md#0-验证黄金准则与反异化防线)
 
-Phase 0 回答一个问题：动刀之前，护栏立好了吗？创建 `.temp/preening-<slug>-lab/`（首建写 `*` 的 `.gitignore`），把当前 Git `HEAD` SHA、原始代码行数（LOC）与文件清单记入 `baseline.md`（公开契约表先留空节占位，Phase 1 回填）；完成脏工作区预检（`git status --porcelain` 非空时先请用户 commit / stash，或经授权将未提交改动纳入行为基线并登记于 `baseline.md`）；按分流矩阵定级（L1–L4）。随后运行目标模块相关测试套件；若测试缺失或覆盖不足以保护核心分支，立即在软件接缝（Seam）处编写锁定当前输入-输出行为的特征化测试并实跑全绿，固化 Baseline 护栏。**Dry-Run 模式豁免**：仅登记既有测试实况与基线，不新增任何项目文件（含测试文件）。
+Phase 0 回答一个问题：动刀之前，护栏立好了吗？创建 `.temp/preening-<slug>-lab/`（首建写 `*` 的 `.gitignore`），把当前 Git `HEAD` SHA、原始代码行数（LOC）与文件清单记入 `baseline.md`（公开契约表先留空节占位，Phase 1 回填）；完成脏工作区预检（`git status --porcelain` 非空时先请用户 commit / stash，或经授权将未提交改动纳入行为基线并登记于 `baseline.md`）；按分流矩阵定级（L1–L4）。随后运行目标模块相关测试套件；若测试缺失或覆盖不足以保护核心分支，立即在软件接缝（Seam）处编写锁定当前输入-输出行为的特征化测试并实跑全绿，固化 Baseline 护栏。**Dry-Run 模式豁免**：仅登记既有测试实况与基线，不新增任何项目文件（含测试文件）。宿主 Plan 模式（禁写）下的降级见[边界与触发契约](#边界与触发契约)。
 
 ### Phase 1 · 全面梳理与拓扑测绘
 
@@ -173,3 +173,5 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 用户请求中混入新业务特性时：仅对结构重构部分启动流水线，新特性以 Next Best Action 形式建议在低熵底座上单独开发，严禁在同一步骤混写。
 
 当用户明确要求「只做梳理与正交分解方案设计、暂不改写代码（Plan-Only / Dry-Run）」时，优先于自治流转规则：完整执行 Phase 0 → Phase 2（零写入，L4 无测试模块仅在蓝图中标注「正式执行前须先补建特征化护栏」），输出结构化审计与重构蓝图后停下等待用户指令，经确认后再继续 Phase 3 → Phase 5。
+
+宿主 Plan 模式（宿主强制只读，仅可写宿主 plan 文件）与 Dry-Run 触发源不同：Dry-Run 出自用户意图，Plan 模式出自宿主约束。用户未声明 Dry-Run 而宿主处于 Plan 模式时，Phase 0 → Phase 2 按 Dry-Run 的零写入口径只读执行，产物暂存于宿主 plan 文件。Phase 0–2 验收标准中需要写盘或实跑的项（基线登记、审计落盘、既有测试全绿），因此后移到进入 Phase 3 之前核验。停机语义也不同：Plan 模式获批退出即视为用户放行，不停机，也不重跑 Phase 0 → Phase 2。进入 Phase 3 之前，必须先把暂存产物落盘到 lab 目录，并补齐 Phase 0 的测试护栏。未完成严禁修改任何业务代码，做法见 [context-and-audit §0 第 4 条](references/context-and-audit.md#0-落盘契约与上下文防腐)。Dry-Run 与 Plan 模式同时成立时，按 Dry-Run 停机待命。
