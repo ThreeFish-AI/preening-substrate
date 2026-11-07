@@ -139,7 +139,7 @@ Phase 2 回答：剥掉历史包袱后，这个模块的本质是什么？基于
 顺序是：先自己全量自检，再交独立盲审，最后整理交付。
 
 1. **全量自检**：运行完整单元测试、集成测试与静态类型/Lint 检查；统计重构前后多维熵减指标。
-2. **独立 Verifier 盲审**：派发全新 Verifier Subagent（仅给 `baseline.md`、`git diff`、测试实测日志与核查表；契约表未回填时另附 `topology-and-audit.md` 公开契约节，见 [verification-and-delivery §2.1](references/verification-and-delivery.md#21-verifier-subagent-派发契约) 第 5 项），逐项审计：① 原有测试断言零删减零弱化；② Public API、序列化与动态反射契约零断裂；③ 悬挂导入与死引用清零；④ 交付报告中的 LOC、文件数与净减少率与 `git diff --stat` 严格一致。未过项立即修复重审。
+2. **独立 Verifier 盲审**：派发全新 Verifier Subagent（仅给 `baseline.md`、`git diff`、测试实测日志与核查表；契约表未回填时另附 `topology-and-audit.md` 公开契约节，见 [verification-and-delivery §2.1](references/verification-and-delivery.md#21-verifier-subagent-派发契约) 第 5 项），逐项审计：① 原有测试断言零删减零弱化（经测试变更清单登记并复核放行的删改除外，判据见 [verification-and-delivery §2.2](references/verification-and-delivery.md#22-四维盲审核查表-quad-gate-audit-checklist)）；② Public API、序列化与动态反射契约零断裂；③ 悬挂导入与死引用清零；④ 交付报告中的 LOC、文件数与净减少率与 `git diff --stat` 严格一致。未过项立即修复重审。
 3. **交付与归档**：清理 `.temp/preening-<slug>-lab/` 内临时脚本（保留自忽略的 4 份核心审计回执供溯源与评测，严禁误删 `.temp/rsi/`），按 [verification-and-delivery §4](references/verification-and-delivery.md#4-标准化梳理清减交付报告模板) 输出《梳理清减交付报告》（若项目有提交约定或用户要求提交，则按 `/commit` 规范原子化提交）。
 
 ## 引用与指针索引 (Single Source of Truth)
