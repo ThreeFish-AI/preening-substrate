@@ -25,5 +25,5 @@
 | 文档路径 | 权威职责定位 (SSOT) |
 | :--- | :--- |
 | [evals/trigger-evals.json](../../evals/trigger-evals.json) | 27 条正负双向触发评测集（13 正向应触发 + 14 近邻不触发），用于回归校验 `SKILL.md` frontmatter `description` 的路由召回率与特异性 |
-| [evals/evals.json](../../evals/evals.json) | 7 大典型重构场景（L1 单文件清减、L2 模块内正交重组、L4 无测试存量泥球、L3 跨模块公共契约演进、动态反射防误删、Dry-Run 只读诊断、重构与新特性职责边界）端到端验收测试集 |
+| [evals/evals.json](../../evals/evals.json) | 8 大典型重构场景（L1 单文件清减、L2 模块内正交重组、L4 无测试存量泥球、L3 跨模块公共契约演进、动态反射防误删、Dry-Run 只读诊断、宿主 Plan 模式降级、重构与新特性职责边界）端到端验收测试集 |
 | [docs/.agents/issue.md](./issue.md) | 历史工程 Issue 台账（现象、表因、根因、处理方式与长效防范约束） |

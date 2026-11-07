@@ -87,7 +87,7 @@ references/verification-and-delivery.md    # Phase 0 & 5 规约 SSOT（Feathers 
 references/plain-expression.md             # 文本表达质感 SSOT（读者四结果 / 句构三律 / 术语治理 / 双通道条目模板 / 改写筛选与禁则 / 表达力四维 / 改动验证）
 references/rsi-hook.md                     # RSI 自我改进钩子协议指针 stub（协议 SSOT 已上收至统一仓库 ThreeFish-AI/rsi）
 evals/trigger-evals.json                   # 触发边界评测集（13 正向应触发 + 14 近邻不触发，用于校验 description 路由精度）
-evals/evals.json                           # 端到端任务评测集（7 大重构场景：L1 单文件清减 / L2 正交重组 / L4 无测试遗产护栏 / L3 跨模块兼容垫片 / 动态反射排雷 / Dry-Run / 职责边界）
+evals/evals.json                           # 端到端任务评测集（8 大重构场景：L1 单文件清减 / L2 正交重组 / L4 无测试遗产护栏 / L3 跨模块兼容垫片 / 动态反射排雷 / Dry-Run / Plan 模式降级 / 职责边界）
 docs/.agents/knowledge-map.md              # 仓库文档与知识索引
 docs/.agents/issue.md                      # 工程 Issue 根因与防范台账
 README.md                                  # 安装、使用、六阶段方法论与仓库结构说明
