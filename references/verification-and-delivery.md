@@ -31,7 +31,7 @@ git rev-parse HEAD
 wc -l <目标模块文件列表>
 ```
 
-> **公开契约表回填**：`baseline.md` 需含「公开契约表」节，供 Gate 2 契约对照（见 [§2.2](#22-四维盲审核查表-quad-gate-audit-checklist)）。Phase 0 时该表允许为空节占位——Phase 1 完成时**必须**从 `topology-and-audit.md` 的公开契约节（[context-and-audit §1.1](context-and-audit.md#11-资产清单与公开契约边界-public-surface-inventory)）回填；未回填的替代路径是把该节直接纳入 Verifier 输入包（[§2.1](#21-verifier-subagent-派发契约) 第 5 项），否则 Gate 2 无对照基线、门禁无法判定。
+> **公开契约表回填**：`baseline.md` 需含「公开契约表」节，供 Gate 2 契约对照（见 [§2.2](#22-四维盲审核查表-quad-gate-audit-checklist)）。Phase 0 时该表允许为空节占位——Phase 1 完成时**必须**从 `topology-and-audit.md` 的公开契约节（[context-and-audit §1.1](context-and-audit.md#11-资产清单与公开契约边界-public-surface-inventory)）回填；未回填的替代路径是把该节直接纳入 Verifier 输入包（[§2.1](#21-verifier-subagent-派发契约) 第 5 项），否则 Gate 2 无对照基线、门禁无法判定。同一 `baseline.md` 另设「测试变更清单」节：Phase 0 空节占位、Phase 1 契约表回填时一并建立（判据见 [§2.2](#22-四维盲审核查表-quad-gate-audit-checklist)「测试变更清单」），无测试删改时保持「无」。
 
 > **回退安全边界**：后续所有微步回退（见 [orthogonal-refactoring §0](orthogonal-refactoring.md#0-重构步法总则双阶段帽子与两振出局回退)）只允许触及本流水线自身引入的变更；若 Phase 0 已登记「含未提交改动」，回退前必须先留档用户 WIP——以 `git stash push -m <唯一tag>`（按 tag 查出条目 SHA；`push` 会还原已跟踪改动，须立即 `apply --index` 还原，条目留栈作备份，用毕 `drop`；细则见上引回退白名单 ②）或 `git diff HEAD > .temp/preening-<slug>-lab/wip-snapshot.patch`（须带 `HEAD`，否则漏掉已暂存的 WIP；未跟踪文件不在其内）留档；`git stash create` 只产出悬空提交、不进 stash 栈，无法取回，严禁使用。严禁直接丢弃用户 WIP。
 
@@ -57,7 +57,7 @@ wc -l <目标模块文件列表>
 
 ### 2.1 Verifier Subagent 派发契约
 主 Agent 派发一个**全新只读上下文**的 `Verifier Subagent`（或 `research` 子代理），输入严格限制为以下客观材料（第 1–4 项必附，第 5 项仅按条件附加；**绝不传入主 Agent 的重构自评或辩解**）：
-1. `.temp/preening-<slug>-lab/baseline.md`（重构前 Git SHA、公开契约表（Phase 1 完成时自 `topology-and-audit.md` 回填，见 [§1.1](#11-工作区初始化与基线采集)）、原始测试基准）；
+1. `.temp/preening-<slug>-lab/baseline.md`（重构前 Git SHA、公开契约表（Phase 1 完成时自 `topology-and-audit.md` 回填，见 [§1.1](#11-工作区初始化与基线采集)）、原始测试基准、测试变更清单（Phase 3/4 发生测试删改时登记，判据见 [§2.2](#22-四维盲审核查表-quad-gate-audit-checklist)「测试变更清单」））；
 2. `git diff <baseline_sha>` 与 `git diff --stat <baseline_sha>`——**对工作区取全量变更**（已提交 + 未提交，不依赖变更是否已 commit）；untracked 新文件（特征化测试、新建模块文件）先以 `git add -N` 标记纳入 diff，或附 `git status --porcelain` 清单一并交验；
 3. 重构后实跑测试套件与静态检查（Linter / Typecheck）的终端原始输出日志；
 4. 下方 §2.2 的《四维盲审核查表》；
@@ -69,11 +69,17 @@ Verifier Subagent 必须逐项核对并向主 Agent 出具回执（`.temp/preeni
 
 | 核验维度 | 确定性通过判据（任一不满足即判 `REJECT`） | 核验方法与命令证据 |
 | :--- | :--- | :--- |
-| **Gate 1 · 测试防篡改与等价性** | 既有业务测试与 Phase 0 特征化测试 100% 通过；**未发生删减有效测试断言、`@skip` 屏蔽用例、或放宽断言精度的 Objective Hacking**（仅随合法内部符号重命名同步更新导入路径除外） | `git diff <baseline_sha> -- tests/` 逐行审阅（覆盖工作区未提交变更）+ 实跑测试日志 |
+| **Gate 1 · 测试防篡改与等价性** | 既有业务测试与 Phase 0 特征化测试 100% 通过；**未发生删减有效测试断言、`@skip` 屏蔽用例、或放宽断言精度的 Objective Hacking**（仅随合法内部符号重命名同步更新导入路径除外；「有效」指被测对象仍存于工作区——测试 diff 内每个被删改的断言与用例须逐条登记入测试变更清单并经 Verifier 复核，清单外的删改一律判 `REJECT`，处置类别与证据命令见下方「测试变更清单」） | `git diff <baseline_sha> -- tests/` 逐行审阅（覆盖工作区未提交变更）+ 实跑测试日志 + 按下方「测试变更清单」逐条复跑证据命令 |
 | **Gate 2 · 公开契约与二阶涟漪防震** | 模块对外 Public API 签名、返回值语义、序列化字段（JSON/Pydantic/ORM）、CLI/配置文件键名及跨仓按名调用入口（如 `negentropy`）零意外破坏；若有跨模块重命名，全仓入站调用已迁移完毕或已保留重导出兼容垫片 | 对比 `baseline.md` 公开契约表（未回填时改用 `topology-and-audit.md` 公开契约节）与当前导出表；对原符号名执行全仓 `Grep` 确认无悬挂调用 |
 | **Gate 3 · 代码卫生与可读性不退步** | 零悬挂导入（Orphan Imports）、零未定义符号、零循环导入；未出现为刷低 LOC 而将清晰多行逻辑塞成一行的反模式；注释精简且无残留的注释掉的代码块 | 静态检查（`ruff check` / `mypy` / `tsc --noEmit`）零报错 + Diff 人工审阅（折叠判据见 [orthogonal-refactoring §4 第 4 条](orthogonal-refactoring.md#4-激进剪枝与过度封装拍平)） |
 | **Gate 4 · 度量数据真实性对账** | 拟交付报告中的改造前/后 LOC、文件数、净减少行数与优化率，与 `wc -l` 及 `git diff --numstat` 实测数值**逐字精确一致**（零估算、零虚构） | 核对 `wc -l` 与 `git diff --stat` 真实数字 |
 
+- **测试变更清单**：被删改的测试断言逐条登记入 `baseline.md`「测试变更清单」节（Phase 0 空节占位，Phase 1 契约表回填时一并建立；无测试删改时保持「无」），登记时机为删改发生时，每行仅登事实字段：测试标识（`文件::用例名`）、变更类型（删用例 / 删改断言）、被测对象标识（仅对象清除类需填）、备注（仅「无」）。不设理由与结论栏，清单中出现的理由与结论文本视同未登记；交接给 Verifier 前，非 schema 文本（理由、结论、辩解等）一律剥除。全部证据命令一律在仓库根运行——pathspec 相对 cwd 解析，错位 cwd 会静默缩小搜索面；判定以退出码为准：命中 rc=0、零命中 rc=1，fatal（如 rc=128）与空输出均不构成零命中证据。
+  - 重命名同步类：合法内部符号重命名；改名后断言行与原行仅差名称替换，`git grep -nF --untracked -e '<旧名>'` 工作区零命中（rc=1；含 untracked 新文件）；
+  - 对象清除类：被测对象已按 Phase 3/4 合法清除（符号、参数、僵尸分支或重复拷贝）。证据按序复跑三段只读命令，全部成立方可放行——`git grep -nF -e '<对象标识>' <baseline_sha> -- ':(exclude)<测试目录>'` 基线非测试代码至少 1 命中（证其曾真实存在，防止以臆造标识凑零）；`git grep -nF --untracked -e '<对象标识>'` 工作区零命中（rc=1；含 untracked 新文件，忽略 `.gitignore` 覆盖路径；`--untracked` 只用于工作区检查，不得与 revision 并用，并用即 fatal rc=128）；该标识在 `<baseline_sha>` 与工作区的 diff 中只出现在删除行。被删对象定义所在的 diff hunk 须为纯删除：hunk 内出现新增的替代定义即视为改名而非清除，Verifier 须目检该 hunk 是否伴随「旧名→新名」改名对，有改名对时对象清除类不成立，改按重命名同步类核对；
+  - 拷贝合并类：重复拷贝并入唯一权威定义源。另须 `git grep -nF --untracked -e '<保留侧定义>'` 工作区恰命中 1 行（rc=0 且输出仅 1 行；含 untracked 新文件；保留侧=合并后唯一权威定义源），合并后唯一定义由构造保证拷贝一致性检查无对象可比。
+- **Verifier 核验顺序**：先自 `git diff <baseline_sha> -- tests/` 独立列出被删改的全部断言与用例，再与测试变更清单对账——diff 中存在而清单未登记的删改一律判 `REJECT`。被删用例中含断言语义的删除行逐一交叉核对已登记标识（`git diff -U0 <baseline_sha> -- tests/ | grep '^-' | grep -vE '^--- '` 剔除 diff 文件头行后逐行比对，每行须至少命中一个已登记标识——测试标识或被测对象标识的任一成分即算命中），防以真实但无关的已清除标识凑证。清单仅登记事实，Verifier 不采信其任何结论，处置类别以复跑证据命令的输出为准。
+- **行为契约兜底**：整用例删除须其全部断言均以已登记对象为被测对象；独立成立的部分断言须移入或保留于存活测试并在清单登记标识，Verifier 以 `git grep -nF --untracked` 在存活测试定位并核对其通过日志 [5][6]；复跑输出无法支持放行的条目一律判 `REJECT`，清单登记不能替代证据。
 - **闭环修复**：若 Verifier 任一 Gate 返回 `REJECT`，Refactorer 必须按回执定位的 `文件:行号` 就地修复（或回滚问题切片）并重新提请核验，直至四门全绿方可出闸。
 - **单 Agent 运行时降级**：当宿主环境不支持派发 Subagent 时，主 Agent 必须在完成修改后显式切换至「独立审计员视角」，从磁盘重新执行 `git diff` 与 `wc -l` 逐项填写 `verification-receipt.md`，并在最终交付报告的验证结论栏注明 `（单 Agent 角色隔离核验）`。
 
@@ -147,3 +153,7 @@ Verifier Subagent 必须逐项核对并向主 Agent 出具回执（`.temp/preeni
 [3] M. C. Feathers, *Working Effectively with Legacy Code*. Upper Saddle River, NJ, USA: Prentice Hall PTR, 2004.
 
 [4] E. Schluntz and B. Zhang, "Building effective agents," *Anthropic Engineering*, Dec. 19, 2024. [Online]. Available: https://www.anthropic.com/engineering/building-effective-agents
+
+[5] S. Yoo and M. Harman, "Regression testing minimization, selection and prioritization: A survey," *Softw. Test. Verif. Reliab.*, vol. 22, no. 2, pp. 67–120, Mar. 2012, doi: 10.1002/stvr.430.
+
+[6] G. Rothermel, M. J. Harrold, J. Ostrin, and C. Hong, "An empirical study of the effects of minimization on the fault detection capabilities of test suites," in *Proc. Int. Conf. Softw. Maintenance (ICSM)*, 1998, pp. 34–43, doi: 10.1109/ICSM.1998.738487.

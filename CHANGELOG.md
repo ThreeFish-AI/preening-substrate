@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - 宿主 Plan 模式（宿主强制只读）降级路径（RSI-20261107-02）：[SKILL.md](SKILL.md#边界与触发契约) 边界与触发契约补一段，用户未声明 Dry-Run 而宿主处于 Plan 模式时，Phase 0 → Phase 2 按 Dry-Run 零写入口径只读执行，产物暂存于宿主 plan 文件；获批退出即视为放行，不停机、不重跑 Phase 0 → Phase 2；进入 Phase 3 之前必须先落盘到 lab 目录并补齐测试护栏，未完成严禁修改业务代码（铁律 1、铁律 2 判据不变，仅落盘与实跑时点后移）。[context-and-audit §0](references/context-and-audit.md#0-落盘契约与上下文防腐) 新增第 4 条，给出暂存范围、补落盘顺序与锚点重核；SKILL.md Phase 0 段补指针。
 
+### Changed
+
+- Gate 1 判据操作化（RSI-20261107-01）：[references/verification-and-delivery.md](references/verification-and-delivery.md) §2.2 明确「有效」= 被测对象仍存于工作区；Phase 3/4 合法清除的被测对象（符号、参数、僵尸分支、重复拷贝）所对应的测试删改，须逐条登记入 `baseline.md`「测试变更清单」（仅事实字段，无理由与结论栏，交接 Verifier 前剥除非 schema 文本），Verifier 先自 `git diff` 独立对账、把含断言语义的删除行逐一交叉核对已登记标识，再逐条复跑只读 `git grep` 证据命令（一律仓库根运行，以退出码判定：命中 rc=0、零命中 rc=1，fatal 不构成零命中），清单外删改与证据不成立的条目一律 `REJECT`；处置分重命名同步 / 对象清除 / 拷贝合并三类，对象清除类追加「定义所在 diff hunk 须为纯删除，伴随改名对即改按重命名同步复核」；行为契约兜底要求独立成立的部分断言移入存活测试并登记标识；§1.1 公开契约表注与 §2.1 Verifier 输入同步登记清单建立链路，SKILL.md Phase 5 步骤 2 ① 补同款指针；新增 IEEE [5][6]（测试套件最小化综述与最小化损害故障检出的实证研究，支撑删测须证等价覆盖），[6] 作者按 Crossref 勘误为 M. J. Harrold。
+
 ## [1.0.6] - 2026-10-14
 
 ### Added
