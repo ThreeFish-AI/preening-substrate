@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
-- README 安装节 Antigravity 软链注记更正（RSI-20261114-01）：[README.md](README.md#安装) 原注称 Antigravity 不识别 symlink 安装的技能、建议改用克隆直装或 `npx skills add --copy`，与同节方式二（symlink 进 `~/.gemini/config/skills/`）自相矛盾，所引 [vercel-labs/skills#633](https://github.com/vercel-labs/skills/issues/633) 也已于 2026-11-06 关闭；改写为现行事实：Antigravity 识别 `~/.gemini/config/skills/` 下的 symlink 技能，#633 报告的不识别发生在旧路径 `~/.gemini/antigravity/skills/`，劝退建议删去。
+- README 安装节 Antigravity symlink 注记更正（RSI-20261114-01）：[README.md](README.md#安装) 原注称 Antigravity 不识别 symlink 安装的技能、建议改用克隆直装或 `npx skills add --copy`，与同节方式二（symlink 进 `~/.gemini/config/skills/`）自相矛盾，所引 [vercel-labs/skills#633](https://github.com/vercel-labs/skills/issues/633) 也已于 2026-11-06 关闭；改写为现行事实：Antigravity 识别 `~/.gemini/config/skills/` 下的 symlink 技能，#633 报告的不识别发生在旧路径 `~/.gemini/antigravity/skills/`，劝退建议删去。
 
 ## [1.0.6] - 2026-10-14
 
