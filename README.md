@@ -1,3 +1,7 @@
+# preening-substrate（已迁入 ThreeFish-AI/skills）
+
+> 本仓已归档（只读）。Skill 现由 [ThreeFish-AI/skills](https://github.com/ThreeFish-AI/skills) 仓 `skills/preening-substrate/` 维护（历史经 git-filter-repo 完整保留）；新 Issue/PR 请到 skills 仓，或经 [ThreeFish-AI/rsi](https://github.com/ThreeFish-AI/rsi) 统一回流回路。
+
 # preening-substrate — 梳理清减
 
 > 遵循「先全面梳理与护栏锚定，再提炼核心、正交分解，最后激进剪枝与独立对抗核验」认知演进法则，对目标模块执行结构性重构、深模块重塑与语义规范化，实现可度量系统性熵减的 Agent Skill。
